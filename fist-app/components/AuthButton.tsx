@@ -5,12 +5,19 @@ import { createClient } from '@/lib/supabase/client'
 export function AuthButton() {
   const handleLogin = async () => {
     const supabase = createClient()
-    await supabase.auth.signInWithOAuth({
+    
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'discord',
       options: {
-        redirectTo: `${window.location.origin}/feed`,
-      },
+        scopes: 'identify email',
+        redirectTo: window.location.origin + '/feed'
+      }
     })
+    
+    if (error) {
+      console.error('Login error:', error)
+      alert('Erreur de connexion: ' + error.message)
+    }
   }
 
   return (

@@ -10,7 +10,7 @@ import { AuthButton } from '@/components/AuthButton'
 import type { ContentType } from '@/lib/types'
 
 export default function FeedPage() {
-  const { user, loading: authLoading, canUpload, isAdmin } = useAuth()
+  const { user, loading: authLoading, error: authError, canUpload, isAdmin } = useAuth()
   const [filter, setFilter] = useState<ContentType | 'all'>('all')
   const { posts, loading: postsLoading, refetch } = usePosts(filter)
 
@@ -23,7 +23,11 @@ export default function FeedPage() {
   }
 
   if (authLoading) {
-    return <div className="p-8 text-center">Chargement...</div>
+    return <div className="p-8 text-center">Chargement... (auth)</div>
+  }
+
+  if (authError) {
+    return <div className="p-8 text-center text-red-500">Erreur: {authError}</div>
   }
 
   if (!user) {
@@ -45,6 +49,7 @@ export default function FeedPage() {
         <div className="flex items-center gap-4">
           <img src={user.avatar || ''} alt={user.username} className="w-10 h-10 rounded-full" />
           <span className="font-bold text-[#C9A227]">{user.username}</span>
+          <span className="text-sm text-[#71717A]">({user.role})</span>
         </div>
       </header>
 
@@ -53,7 +58,7 @@ export default function FeedPage() {
       <FilterBar selected={filter} onChange={setFilter} />
 
       {postsLoading ? (
-        <p className="text-center py-8 text-[#71717A]">Chargement...</p>
+        <p className="text-center py-8 text-[#71717A]">Chargement... (posts)</p>
       ) : posts.length === 0 ? (
         <p className="text-center py-8 text-[#71717A]">Aucun contenu pour le moment</p>
       ) : (
