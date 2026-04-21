@@ -73,7 +73,7 @@ Créer une plateforme de vote collectif pour les membres du Discord "La Fistini�
 | Voter (like/dislike) | ❌ | ❌ | ✅ | ✅ |
 | Supprimer son post | ❌ | ❌ | ✅ (le sien) | ✅ |
 | Supprimer n'importe quel post | ❌ | ❌ | ❌ | ✅ |
-| Voir Dashboard | ❌ | ❌ | ❌ | ✅ |
+| Voir Dashboard | ❌ | ❌ | ✅ | ✅ |
 
 ---
 
@@ -150,14 +150,16 @@ Créer une plateforme de vote collectif pour les membres du Discord "La Fistini�
 - Stats personnelles (nb posts, score total)
 - Actions: supprimer ses posts
 
-### Page 3: Dashboard (Admin)
+### Page 3: Dashboard
 **URL:** `/dashboard`
+
+**Visible pour:** Primate/Lycanthrope + Admin
 
 **Fonctionnalités:**
 - Stats globales (total posts, participants, votes)
 - Classement participants (top contributeurs)
 - Répartition par type de contenu
-- Actions de modération (suppression posts)
+- Actions de modération (suppression posts) - Admin only
 
 ### Page 4: Page Publique
 **URL:** `/` (homepage sans auth)
