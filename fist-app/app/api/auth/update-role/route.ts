@@ -62,14 +62,8 @@ export async function POST() {
     // Update user role in our database
     const { error: updateError } = await supabase
       .from('users')
-      .upsert({
-        discord_id: discordId,
-        username: user.user_metadata?.full_name || user.user_metadata?.name || 'Unknown',
-        avatar: user.user_metadata?.avatar
-          ? `https://cdn.discordapp.com/avatars/${discordId}/${user.user_metadata.avatar}.png`
-          : null,
-        role,
-      }, { onConflict: 'discord_id' })
+      .update({ role })
+      .eq('id', user.id)
 
     if (updateError) {
       console.error('Update role error:', updateError)

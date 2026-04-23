@@ -5,15 +5,15 @@ import { createClient } from '@/lib/supabase/client'
 export function AuthButton() {
   const handleLogin = async () => {
     const supabase = createClient()
-    
-    const { data, error } = await supabase.auth.signInWithOAuth({
+
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: 'discord',
       options: {
         scopes: 'identify email',
-        redirectTo: window.location.origin + '/feed'
+        redirectTo: window.location.origin
       }
     })
-    
+
     if (error) {
       console.error('Login error:', error)
       alert('Erreur de connexion: ' + error.message)
@@ -23,9 +23,9 @@ export function AuthButton() {
   return (
     <button
       onClick={handleLogin}
-      className="px-4 py-2 bg-[#4B5320] text-white font-bold rounded hover:bg-[#3a3f18] transition-colors"
+      className="px-8 py-4 bg-[#bbf600] text-black font-['Space_Grotesk'] font-black text-xs uppercase tracking-widest hover:bg-white transition-all active:scale-95"
     >
-      Se connecter avec Discord
+      Connect with Discord
     </button>
   )
 }

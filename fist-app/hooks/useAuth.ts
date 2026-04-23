@@ -26,13 +26,21 @@ export function useAuth() {
           return
         }
 
-        if (session?.user) {
-          // First try to fetch existing user
-          const { data: existingUser } = await supabase
-            .from('users')
-            .select('*')
-            .eq('discord_id', session.user.id)
-            .single()
+          if (session?.user) {
+          const fetchUserWithRetry = async (retries = 3, delay = 500) => {
+            for (let i = 0; i < retries; i++) {
+              const { data } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', session.user.id)
+                .single()
+              if (data) return data
+              if (i < retries - 1) await new Promise(r => setTimeout(r, delay))
+            }
+            return null
+          }
+
+          const existingUser = await fetchUserWithRetry()
 
           if (existingUser) {
             console.log('[Auth] Existing user found:', existingUser)
@@ -41,38 +49,9 @@ export function useAuth() {
               setLoading(false)
             }
           } else {
-            // User doesn't exist, try to insert
-            console.log('[Auth] Creating new user...')
-            const { data: newUser, error: insertError } = await supabase
-              .from('users')
-              .insert({
-                discord_id: session.user.id,
-                username: session.user.user_metadata?.full_name || session.user.user_metadata?.name || 'Unknown',
-                avatar: session.user.user_metadata?.avatar
-                  ? `https://cdn.discordapp.com/avatars/${session.user.id}/${session.user.user_metadata.avatar}.png`
-                  : null,
-                role: 'visitor',
-              })
-              .select()
-              .single()
-
-            if (insertError) {
-              console.error('[Auth] Insert error:', insertError)
-              // If insert fails, create local user object
-              if (mounted) {
-                setUser({
-                  id: session.user.id,
-                  discord_id: session.user.id,
-                  username: session.user.user_metadata?.full_name || 'Unknown',
-                  avatar: session.user.user_metadata?.avatar || null,
-                  role: 'visitor',
-                  created_at: new Date().toISOString(),
-                })
-                setLoading(false)
-              }
-            } else if (newUser && mounted) {
-              console.log('[Auth] New user created:', newUser)
-              setUser(newUser)
+            console.error('[Auth] User not found after retries - trigger may have failed')
+            if (mounted) {
+              setError('User not found. Please contacter le support.')
               setLoading(false)
             }
           }
@@ -96,28 +75,36 @@ export function useAuth() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log('[Auth] State change:', event)
       if (event === 'SIGNED_IN' && session?.user) {
-        // Refetch user
-        supabase
-          .from('users')
-          .select('*')
-          .eq('discord_id', session.user.id)
-          .single()
-          .then(({ data }) => {
+        const fetchUserWithRetry = async (retries = 3, delay = 500) => {
+          for (let i = 0; i < retries; i++) {
+            const { data } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', session.user.id)
+              .single()
+            if (data) return data
+            if (i < retries - 1) await new Promise(r => setTimeout(r, delay))
+          }
+          return null
+        }
+
+        fetchUserWithRetry().then(async (data) => {
             if (data) {
               setUser(data)
-            } else {
-              // Create if doesn't exist
-              supabase
-                .from('users')
-                .insert({
-                  discord_id: session.user.id,
-                  username: session.user.user_metadata?.full_name || 'Unknown',
-                  avatar: session.user.user_metadata?.avatar || null,
-                  role: 'visitor',
+              // Sync Discord role
+              await fetch('/api/discord-role', { method: 'POST' })
+                .then(res => res.json())
+                .then(async (roleData) => {
+                  if (roleData.role && roleData.role !== data.role) {
+                    await supabase
+                      .from('users')
+                      .update({ role: roleData.role })
+                      .eq('id', session.user.id)
+                    setUser({ ...data, role: roleData.role })
+                  }
                 })
-                .select()
-                .single()
-                .then(({ data }) => setUser(data))
+            } else {
+              console.error('[Auth] User not found in database - trigger may have failed')
             }
             setLoading(false)
           })

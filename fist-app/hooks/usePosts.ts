@@ -41,10 +41,21 @@ export function usePosts(type: ContentType | 'all' = 'all') {
         userVoteId = dbUser?.id
       }
 
-      const postsWithVotes = (data || []).map((post: any) => ({
-        ...post,
-        user_vote: post.votes?.find((v: any) => v.user_id === userVoteId)?.value || null,
-      }))
+      const postsWithVotes = (data || []).map((post: any) => {
+        const votes = post.votes || []
+        const upvotes = votes.filter((v: any) => v.value === 1).length
+        const downvotes = votes.filter((v: any) => v.value === -1).length
+        const likePercent = upvotes + downvotes > 0 ? (upvotes * 100) / (upvotes + downvotes) : 0
+        return {
+          ...post,
+          user_vote: votes.find((v: any) => v.user_id === userVoteId)?.value || null,
+          like_percent: likePercent,
+          upvotes,
+          downvotes,
+        }
+      })
+
+      postsWithVotes.sort((a, b) => b.like_percent - a.like_percent)
 
       setPosts(postsWithVotes)
     } catch (error) {

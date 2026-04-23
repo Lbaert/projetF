@@ -1,67 +1,98 @@
-import type { Role } from './types'
+import { createClient } from '@/lib/supabase/client'
 
-const DISCORD_API = 'https://discord.com/api/v10'
-const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID!
-const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET!
+const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN
+const FIST_SERVER_ID = process.env.DISCORD_SERVER_ID
 
-export async function getDiscordAuthUrl(state: string): Promise<string> {
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback`
-  const params = new URLSearchParams({
-    client_id: DISCORD_CLIENT_ID,
-    redirect_uri: redirectUri,
-    response_type: 'code',
-    scope: 'identify guilds guild.members.read',
-    state,
-  })
-  return `https://discord.com/oauth2/authorize?${params}`
+export interface DiscordRole {
+  id: string
+  name: string
+  position: number
 }
 
-export async function getDiscordToken(code: string): Promise<string> {
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback`
-  const response = await fetch(`${DISCORD_API}/oauth2/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      client_id: DISCORD_CLIENT_ID,
-      client_secret: DISCORD_CLIENT_SECRET,
-      grant_type: 'authorization_code',
-      code,
-      redirect_uri: redirectUri,
-    }),
-  })
-  const data = await response.json()
-  return data.access_token
+export interface DiscordMember {
+  user_id: string
+  roles: string[]
 }
 
-export async function getDiscordUser(accessToken: string) {
-  const response = await fetch(`${DISCORD_API}/users/@me`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  })
-  return response.json()
+export async function getDiscordMember(discordUserId: string): Promise<DiscordMember | null> {
+  if (!DISCORD_BOT_TOKEN || !FIST_SERVER_ID) {
+    console.warn('Discord bot not configured')
+    return null
+  }
+
+  try {
+    const response = await fetch(
+      `https://discord.com/api/v10/guilds/${FIST_SERVER_ID}/members/${discordUserId}`,
+      {
+        headers: {
+          Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
+        },
+      }
+    )
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.log('[Discord] User not found in server')
+        return null
+      }
+      console.error('[Discord] API error:', response.status)
+      return null
+    }
+
+    const data = await response.json()
+    return {
+      user_id: data.user.id,
+      roles: data.roles,
+    }
+  } catch (error) {
+    console.error('[Discord] Fetch error:', error)
+    return null
+  }
 }
 
-export async function getDiscordGuildMember(accessToken: string, guildId: string) {
-  const response = await fetch(`${DISCORD_API}/users/@me/guilds/${guildId}/member`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  })
-  return response.json()
+export async function getDiscordRoles(): Promise<DiscordRole[]> {
+  if (!DISCORD_BOT_TOKEN || !FIST_SERVER_ID) {
+    return []
+  }
+
+  try {
+    const response = await fetch(
+      `https://discord.com/api/v10/guilds/${FIST_SERVER_ID}/roles`,
+      {
+        headers: {
+          Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
+        },
+      }
+    )
+
+    if (!response.ok) {
+      console.error('[Discord] Roles API error:', response.status)
+      return []
+    }
+
+    const data = await response.json()
+    return data
+      .map((role: any) => ({
+        id: role.id,
+        name: role.name,
+        position: role.position,
+      }))
+      .sort((a: DiscordRole, b: DiscordRole) => b.position - a.position)
+  } catch (error) {
+    console.error('[Discord] Roles fetch error:', error)
+    return []
+  }
 }
 
-export const ROLE_IDS = {
-  FIST: '1459634951891980451',
-  SINGE: '809815744577536050',
-  PRIMATE: '1453063817603846277',
-  LYCANTHROPE: '1413621899044327434',
-} as const
+export function mapDiscordRolesToAppRole(discordRoleIds: string[], allRoles: DiscordRole[]): 'visitor' | 'singe' | 'primate' | 'lycanthrope' | 'admin' {
+  const roleNames = discordRoleIds
+    .map(id => allRoles.find(r => r.id === id)?.name.toLowerCase())
+    .filter(Boolean)
 
-export const GUILD_ID = '809526179643392100'
-export const ADMIN_ID = '770068277044707335'
+  if (roleNames.includes('admin')) return 'admin'
+  if (roleNames.includes('lycanthrope')) return 'lycanthrope'
+  if (roleNames.includes('primate')) return 'primate'
+  if (roleNames.includes('singe')) return 'singe'
 
-export function determineRole(roles: string[]): Role {
-  if (roles.includes(ADMIN_ID)) return 'admin'
-  if (roles.includes(ROLE_IDS.LYCANTHROPE)) return 'lycanthrope'
-  if (roles.includes(ROLE_IDS.PRIMATE)) return 'primate'
-  if (roles.includes(ROLE_IDS.FIST)) return 'fist'
-  if (roles.includes(ROLE_IDS.SINGE)) return 'singe'
   return 'visitor'
 }
