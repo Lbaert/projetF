@@ -65,71 +65,89 @@ export function PostForm({ onSuccess }: PostFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#2A2A2A] border border-[#4A4A4A] rounded-lg p-4 mb-6">
-      <h3 className="text-xl font-bold text-[#C9A227] mb-4">Proposer du contenu</h3>
+    <form onSubmit={handleSubmit} className="bg-black border border-zinc-800 p-6 mb-8">
+      <h3 className="font-['Space_Grotesk'] text-lg font-bold text-[#bbf600] uppercase mb-6 tracking-tight">
+        Initiate Submission
+      </h3>
 
-      <div className="mb-4">
-        <label className="block text-sm mb-2">Type de contenu</label>
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value as ContentType)}
-          className="w-full bg-[#1A1A1A] border border-[#4A4A4A] rounded px-3 py-2 text-white"
-        >
-          <option value="clip">🎬 Clip YouTube</option>
-          <option value="music">🎵 Musique YouTube</option>
-          <option value="reference">💬 Référence (texte)</option>
-          <option value="soundboard">🔊 Soundboard (MP3)</option>
-        </select>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="font-['Space_Grotesk'] text-[10px] text-zinc-500 uppercase block mb-2 tracking-widest">
+            Payload Type
+          </label>
+          <div className="grid grid-cols-2 gap-2">
+            {(['clip', 'music', 'reference', 'soundboard'] as ContentType[]).map((t) => (
+              <button
+                key={t}
+                type="button"
+                onClick={() => setType(t)}
+                className={`px-3 py-2 font-['Space_Grotesk'] text-xs font-medium uppercase flex items-center gap-2 transition-all ${
+                  type === t
+                    ? 'bg-[#bbf600] text-black border border-[#bbf600]'
+                    : 'border border-zinc-800 text-zinc-400 hover:border-[#bbf600]/50 hover:text-white'
+                }`}
+              >
+                {t === 'clip' && '🎬'}
+                {t === 'music' && '🎵'}
+                {t === 'reference' && '💬'}
+                {t === 'soundboard' && '🔊'}
+                {t.charAt(0).toUpperCase() + t.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col">
+          <label className="font-['Space_Grotesk'] text-[10px] text-zinc-500 uppercase block mb-2 tracking-widest">
+            Source URL
+          </label>
+          {(type === 'clip' || type === 'music') && (
+            <input
+              type="url"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="HTTPS://SOURCE_FEED.01"
+              required
+              className="w-full bg-transparent border border-zinc-800 focus:border-[#bbf600] text-white font-['Space_Grotesk'] text-sm p-3 outline-none transition-colors placeholder:text-zinc-800"
+            />
+          )}
+
+          {type === 'reference' && (
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="DESCRIBE THE ASSET..."
+              required
+              rows={3}
+              className="w-full h-full bg-zinc-900/50 border border-zinc-800 focus:border-[#bbf600] text-white font-['Space_Grotesk'] text-sm p-3 outline-none transition-colors placeholder:text-zinc-800 resize-none"
+            />
+          )}
+
+          {type === 'soundboard' && (
+            <input
+              type="file"
+              accept=".mp3"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              required
+              className="w-full bg-transparent border border-zinc-800 text-zinc-400 font-['Space_Grotesk'] text-xs p-3 file:mr-4 file:py-1 file:px-3 file:border file:border-zinc-700 file:text-xs file:font-['Space_Grotesk'] file:uppercase file:bg-zinc-800 file:text-zinc-300 hover:file:border-[#bbf600]"
+            />
+          )}
+        </div>
       </div>
 
-      {(type === 'clip' || type === 'music') && (
-        <div className="mb-4">
-          <label className="block text-sm mb-2">Lien YouTube</label>
-          <input
-            type="url"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="https://www.youtube.com/watch?v=..."
-            required
-            className="w-full bg-[#1A1A1A] border border-[#4A4A4A] rounded px-3 py-2 text-white"
-          />
-        </div>
-      )}
-
-      {type === 'reference' && (
-        <div className="mb-4">
-          <label className="block text-sm mb-2">Référence</label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Ta private joke..."
-            required
-            rows={3}
-            className="w-full bg-[#1A1A1A] border border-[#4A4A4A] rounded px-3 py-2 text-white resize-none"
-          />
-        </div>
-      )}
-
-      {type === 'soundboard' && (
-        <div className="mb-4">
-          <label className="block text-sm mb-2">Fichier MP3 (max 10MB)</label>
-          <input
-            type="file"
-            accept=".mp3"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            required
-            className="w-full bg-[#1A1A1A] border border-[#4A4A4A] rounded px-3 py-2 text-white"
-          />
-        </div>
-      )}
-
-      <button
-        type="submit"
-        disabled={uploading}
-        className="w-full bg-[#8B0000] hover:bg-[#6B0000] text-white font-bold py-2 rounded transition-colors disabled:opacity-50"
-      >
-        {uploading ? 'Upload en cours...' : 'Publier'}
-      </button>
+      <div className="flex items-center gap-4 pt-4 border-t border-zinc-800">
+        <button
+          type="submit"
+          disabled={uploading}
+          className="px-8 py-3 bg-[#bbf600] text-black font-['Space_Grotesk'] font-black text-xs uppercase tracking-wider hover:bg-[#a4d700] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+        >
+          <span>INITIATE SUBMISSION</span>
+          <span className="material-symbols-outlined text-lg">bolt</span>
+        </button>
+        <span className="text-[10px] font-['Space_Grotesk'] text-zinc-600 uppercase">
+          {uploading ? 'Processing...' : 'Awaiting Input'}
+        </span>
+      </div>
     </form>
   )
 }

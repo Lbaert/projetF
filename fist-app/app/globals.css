@@ -1,26 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@300;400;600;700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050505;
+  --foreground: #e5e2e1;
+  --surface: #1a1a1a;
+  --surface-high: #2a2a2a;
+  --surface-low: #1b1b1b;
+  --surface-lowest: #0e0e0e;
+  --border: #333333;
+  --text-muted: #71717a;
+  --lime: #C2FE0C;
+  --lime-dim: #a4d700;
+  --hud-cyan: #3cd7ff;
+  --hud-orange: #fe6b00;
+  --hud-grid: rgba(60, 215, 255, 0.05);
+  --hud-ring: rgba(60, 215, 255, 0.15);
+  --secondary: #fe6b00;
+  --tertiary: #3cd7ff;
+  --error: #ffb4ab;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-lime: var(--lime);
+  --color-lime-dim: var(--lime-dim);
+  --color-surface: var(--surface);
+  --color-surface-high: var(--surface-high);
+  --color-surface-low: var(--surface-low);
+  --color-surface-lowest: var(--surface-lowest);
+  --color-border: var(--border);
+  --color-text-muted: var(--text-muted);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-error: var(--error);
+  --color-hud-cyan: var(--hud-cyan);
+  --color-hud-orange: var(--hud-orange);
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--lime-dim) var(--surface-low);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-low);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--lime-dim);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
+  overflow-x: hidden;
+}
+
+.hud-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, var(--hud-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hud-grid) 1px, transparent 1px);
+}
+
+.radar-ring {
+  border: 1px solid var(--hud-ring);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 15px rgba(60, 215, 255, 0.4), inset 0 0 10px rgba(60, 215, 255, 0.2);
+}
+
+.comm-link-btn {
+  background: rgba(194, 254, 12, 0.1);
+  border: 1px solid var(--lime);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.comm-link-btn:hover {
+  background: var(--lime);
+  color: #000;
+  box-shadow: 0 0 30px var(--lime);
+}
+
+.marathon-logo-shape {
+  width: 120px;
+  height: 120px;
+  border: 4px solid var(--hud-orange);
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: logo-pulse 3s ease-in-out infinite;
+}
+
+.marathon-logo-shape::after {
+  content: '';
+  width: 60%;
+  height: 4px;
+  background: var(--hud-orange);
+  position: absolute;
+}
+
+@keyframes logo-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(60, 215, 255, 0.4), inset 0 0 10px rgba(60, 215, 255, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(60, 215, 255, 0.7), inset 0 0 20px rgba(60, 215, 255, 0.4);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes glitch {
+  0%, 100% {
+    text-shadow: 0 0 10px var(--hud-cyan);
+    transform: translate(0);
+  }
+  20% {
+    text-shadow: -2px 0 var(--hud-orange), 2px 0 var(--hud-cyan);
+    transform: translate(-2px, 1px);
+  }
+  40% {
+    text-shadow: 2px 0 var(--hud-cyan), -2px 0 var(--hud-orange);
+    transform: translate(2px, -1px);
+  }
+  60% {
+    text-shadow: 0 0 10px var(--hud-cyan);
+    transform: translate(-1px, 0);
+  }
+  80% {
+    text-shadow: -1px 0 var(--hud-orange), 1px 0 var(--hud-cyan);
+    transform: translate(1px, 1px);
+  }
+}
+
+.logo-text {
+  animation: glitch 4s infinite;
+}
+
+.scan-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--hud-cyan), transparent);
+  opacity: 0.1;
+  top: 0;
+}
+
+.corner-bracket {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-color: var(--hud-cyan);
+  opacity: 0.5;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }

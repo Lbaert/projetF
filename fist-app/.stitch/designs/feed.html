@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-background": "#e5e2db",
+                    "on-secondary-fixed": "#241a00",
+                    "on-primary": "#2d3404",
+                    "surface-variant": "#353530",
+                    "on-error": "#690005",
+                    "on-tertiary-fixed": "#2b1034",
+                    "on-surface-variant": "#c8c7b8",
+                    "surface-tint": "#c3cc8c",
+                    "surface-container-highest": "#353530",
+                    "pure-white": "#FFFFFF",
+                    "tertiary-fixed-dim": "#e0bae8",
+                    "on-secondary-container": "#352800",
+                    "on-primary-fixed-variant": "#434b18",
+                    "primary-container": "#4b5320",
+                    "inverse-primary": "#5a632e",
+                    "error": "#ffb4ab",
+                    "primary-fixed": "#dfe8a6",
+                    "surface-container": "#20201b",
+                    "on-tertiary-fixed-variant": "#593c62",
+                    "success-green": "#22C55E",
+                    "nav-bg": "#2A2A2A",
+                    "error-container": "#93000a",
+                    "on-primary-container": "#bdc787",
+                    "surface-dim": "#13140f",
+                    "tertiary-container": "#62446b",
+                    "surface-container-low": "#1c1c17",
+                    "surface-container-high": "#2a2a25",
+                    "on-secondary-fixed-variant": "#584400",
+                    "char-black": "#1A1A1A",
+                    "secondary-fixed": "#ffe08e",
+                    "on-primary-fixed": "#191e00",
+                    "outline-variant": "#47483c",
+                    "surface": "#13140f",
+                    "inverse-surface": "#e5e2db",
+                    "primary": "#c3cc8c",
+                    "primary-fixed-dim": "#c3cc8c",
+                    "muted-zinc": "#71717A",
+                    "tertiary": "#e0bae8",
+                    "inverse-on-surface": "#31312c",
+                    "on-tertiary": "#41264a",
+                    "on-secondary": "#3d2e00",
+                    "surface-container-lowest": "#0e0e0a",
+                    "background": "#13140f",
+                    "outline": "#919283",
+                    "secondary-container": "#b18c09",
+                    "secondary": "#ecc246",
+                    "surface-bright": "#393934",
+                    "pending-amber": "#F59E0B",
+                    "combat-gray": "#4A4A4A",
+                    "on-error-container": "#ffdad6",
+                    "blood-red": "#8B0000",
+                    "reject-red": "#DC2626",
+                    "secondary-fixed-dim": "#ecc246",
+                    "on-surface": "#e5e2db",
+                    "tertiary-fixed": "#f9d8ff",
+                    "on-tertiary-container": "#dab4e2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "32px",
+                    "max-width-dashboard": "1400px",
+                    "xs": "8px",
+                    "md": "16px",
+                    "max-width-feed": "800px",
+                    "base": "4px",
+                    "xl": "64px"
+            },
+            "fontFamily": {
+                    "card-title": ["Inter"],
+                    "meta": ["Inter"],
+                    "score": ["Inter"],
+                    "body": ["Inter"],
+                    "h2": ["Inter"],
+                    "h1": ["Inter"]
+            },
+            "fontSize": {
+                    "card-title": ["16px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                    "meta": ["14px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                    "score": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "h2": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                    "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #13140f;
+            color: #e5e2db;
+        }
+        /* Custom scrollbar for military feel */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1A1A1A; }
+        ::-webkit-scrollbar-thumb { background: #4A4A4A; border: 1px solid #ecc246; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body text-body selection:bg-secondary selection:text-char-black">
+<!-- TopAppBar -->
+<header class="bg-zinc-900 dark:bg-[#1A1A1A] border-b-2 border-zinc-700 dark:border-[#4A4A4A] flex justify-between items-center w-full px-6 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-yellow-500 dark:text-yellow-400 text-3xl" data-icon="military_tech">military_tech</span>
+<h1 class="text-2xl font-black text-yellow-500 dark:text-yellow-400 italic font-inter uppercase tracking-widest">FIST</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-zinc-500 hover:bg-zinc-800 p-2 transition-colors border border-transparent focus:border-yellow-500" data-icon="notifications">notifications</button>
+<div class="h-10 w-10 bg-combat-gray rounded-full border-2 border-secondary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Digital painting of an elite futuristic military operator wearing a tactical helmet with glowing gold visors and matte black armor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCpD8Mf8jGgyKE6IXsPiE6bf_5cN_7x0aqjggeBfNtEpZIv1CLAgmdZ_VS5EihPbhqHZh1SInd23hhgGm8WFkr-c-VNIPw2T0hT0PpmwxQqnhDwwHjWid9NChSIRrkYhowQj_qmP6cZ0LrRYTbUYi4nlfw_V4BE-Fb2MrVdhRLkNxuebbbU5adK5lc4Nju5WGthleCb87KwRmIaLKLmPh4TlhwJkq7k8NsibxHoGJJDh3jgZY5I__8OJ1YCNtohfqtcMnxgI2Pzx4I"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-max-width-feed mx-auto px-4 pt-8 pb-24">
+<!-- Search & Filters -->
+<section class="mb-lg space-y-md">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-muted-zinc" data-icon="search">search</span>
+<input class="w-full bg-char-black border-2 border-combat-gray text-on-background px-12 py-3 focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/30 placeholder:text-muted-zinc font-inter font-bold tracking-tighter uppercase" placeholder="SEARCH INTEL..." type="text"/>
+</div>
+<div class="flex flex-wrap gap-xs overflow-x-auto pb-2 no-scrollbar">
+<button class="px-4 py-1.5 bg-secondary text-char-black font-bold text-[12px] uppercase border border-secondary transition-all">ALL</button>
+<button class="px-4 py-1.5 bg-char-black text-muted-zinc font-bold text-[12px] uppercase border border-combat-gray hover:border-secondary hover:text-on-background transition-all">Clip</button>
+<button class="px-4 py-1.5 bg-char-black text-muted-zinc font-bold text-[12px] uppercase border border-combat-gray hover:border-secondary hover:text-on-background transition-all">Music</button>
+<button class="px-4 py-1.5 bg-char-black text-muted-zinc font-bold text-[12px] uppercase border border-combat-gray hover:border-secondary hover:text-on-background transition-all">Reference</button>
+<button class="px-4 py-1.5 bg-char-black text-muted-zinc font-bold text-[12px] uppercase border border-combat-gray hover:border-secondary hover:text-on-background transition-all">Soundboard</button>
+</div>
+</section>
+<!-- Feed -->
+<div class="space-y-lg">
+<!-- Feed Item 1 -->
+<article class="bg-combat-gray border-l-4 border-secondary p-md space-y-md shadow-lg">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border-2 border-secondary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Avatar of a grizzled military veteran with scars and a mechanical eyepiece, gritty art style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbLE9qebKm_-iDUn9Hq0HUd8g6gOGIChPO9oQNaLpmsaid3Imv6dJfPYGn___zzeYmXAK9qm_uV3kO5jBwWk-c0nSkLL8TC30EnxpppD-sJ67ymJ2jJvSn6yYQa3bMKELYqfdgRXuEGi3pnm0eGssbvk98ToHQNSdN-xTUDSay-PjCOt_mlB5py1Vk8oss8MKnyWeMXBVUCu_CiTT51imnMXhKx6VQC0KAXy7j5C2glfM80oYkjcMHAGXAbMYdJkoACdis4e5FFS0G"/>
+</div>
+<div>
+<p class="font-inter font-black text-secondary text-card-title">COMMANDER_REDUX</p>
+<p class="text-[10px] text-muted-zinc font-bold uppercase tracking-tighter">POSTED 2H AGO</p>
+</div>
+</div>
+<span class="bg-secondary/20 text-secondary border border-secondary px-2 py-0.5 text-[10px] font-black uppercase tracking-widest">CLIP</span>
+</div>
+<div class="aspect-video bg-char-black relative group cursor-pointer border border-combat-gray overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="Epic cinematic capture of a first-person shooter killstreak with explosions and particle effects in a dark industrial environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYNdvxH9M6TlgmdddENFRvsfSAJMIrKQwMtDBgq4yXrPf8_4M-_lCnXMTCbdPnm33iRjgt7o4tjil4HUVj7XXe7O4YRdLgKbPYLEL1mhQGbp3HlzwVlJeQrJZuESmJboaIrYlEkzVagOIfwsYK8KgJSFhtF--BRf7SUXFMuRN69SgYC3jEZPf-eVlrb13Y_XCIPAF5gQW4aEF6wCsahfpKajsHocxWKnY5hLF-FmUAxJ1LFrfIs4pE7BQ-8vCiUq0-F9mAvhmyB5-K"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-pure-white text-6xl drop-shadow-[0_0_10px_rgba(0,0,0,0.8)]" data-icon="play_circle">play_circle</span>
+</div>
+<div class="absolute bottom-2 right-2 bg-char-black/80 px-2 py-1 text-[10px] font-bold border border-secondary">00:45</div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-zinc-500/30">
+<div class="flex items-center gap-xs">
+<button class="flex items-center gap-xs px-3 py-1.5 bg-success-green/20 text-success-green border border-success-green hover:bg-success-green hover:text-char-black transition-all font-black text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_up" data-weight="fill" style="font-variation-settings: 'FILL' 1;">thumb_up</span>
+<span>1.2K</span>
+</button>
+<button class="flex items-center gap-xs px-3 py-1.5 bg-char-black text-muted-zinc border border-combat-gray hover:border-reject-red hover:text-reject-red transition-all font-black text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_down">thumb_down</span>
+<span>42</span>
+</button>
+</div>
+<div class="text-right">
+<span class="font-score text-secondary text-score tracking-tighter">97%</span>
+<p class="text-[10px] font-bold text-muted-zinc uppercase">PRECISION</p>
+</div>
+</div>
+</article>
+<!-- Feed Item 2 -->
+<article class="bg-combat-gray border-l-4 border-zinc-500 p-md space-y-md shadow-lg">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border-2 border-secondary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Abstract minimalist profile of a tactical hacker with glowing neon matrix code reflected in their glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_4NeiyrJPMWGG1sJ7400-vjNqsY2CYJGp-ZLW1ANbkAhVcNCF3KMd5nhKMDLAB0DHSaN87-MeWKbVhJl1_-KwcdK1M5Qx7tARvV7jeErt4ZXxhqMyu9CocakISe2H3CFSUDun1wECoSXMpmCHCtGQxwTAV6RONfArI6Sb2jGpfPU0Glgsw5IjxqW1hBIQDktHDvJl_It_L-EaUAJdp3-DqI8rJejQd1Wnko0k3uDZjPndDmN0MGSlYPxGlrl5eXk-yH2ZPeLw35if"/>
+</div>
+<div>
+<p class="font-inter font-black text-secondary text-card-title">SIGNAL_LOST</p>
+<p class="text-[10px] text-muted-zinc font-bold uppercase tracking-tighter">POSTED 5H AGO</p>
+</div>
+</div>
+<span class="bg-char-black/50 text-on-surface-variant border border-combat-gray px-2 py-0.5 text-[10px] font-black uppercase tracking-widest">REFERENCE</span>
+</div>
+<div class="p-4 bg-char-black border border-combat-gray font-inter leading-relaxed">
+<p class="text-on-background italic">"THE UPDATED EXTRACTION COORDINATES HAVE BEEN COMPROMISED. REDIRECT ALL UNITS TO GRID-DELTA. NO COMMUNICATIONS UNTIL DEPLOYMENT."</p>
+<div class="mt-4 flex gap-2">
+<div class="w-24 h-16 bg-combat-gray overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Top down military tactical map with red and blue mission markers" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_m7pl1xZnS-f4X5C_NYzBIfXTRYmyEYd6n5lEiscw-4sU2oZ9miFu8rp_yk11aMLAM8FErkeqWpOIJA9LzJJzPzHyCTtx0y76GZKdhYjVrIv_qWUKI22jvAfbdAng8rw0cNKGjjBeLjcmdX9l3_c_tIz_fE1-Aw57WI1JoR6_D6y3hk33CabhcVMdlBJlz98Gt5I3l2CBx6mPCgCoZLIEQYvUewKOXCiHhT58J6Wvy2kek90H80wOnxwxDa79po6-EjioBNArtpFT"/>
+</div>
+<div class="w-24 h-16 bg-combat-gray overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up of high-tech military hardware encrypted data screen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMljLdNM-Lqcn5SGxbPzCKpYju2sthhaJhI-5EfwGwZVOxrfiHflq8ISWFv9GsRpouK_NXQYScJ5fnsrYsMVYX8NBzypgzQU9wh8KJBeDNDGSbTebo1m-R7klc-PVjyHd4bGjIFcFiZzHvnSbSteQoEuvOTZSe8u8zRgWSCGgjgCB09c04n52eExQISiMd-sgy_hRByt5of-QDFHk4q-EDzS_dcxuvTLQGwKfoiXemHbCV_1VZXkgnqx0upzlZ1-UEzNUJFIkmJmJr"/>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-zinc-500/30">
+<div class="flex items-center gap-xs">
+<button class="flex items-center gap-xs px-3 py-1.5 bg-char-black text-muted-zinc border border-combat-gray hover:border-success-green hover:text-success-green transition-all font-black text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_up">thumb_up</span>
+<span>843</span>
+</button>
+<button class="flex items-center gap-xs px-3 py-1.5 bg-reject-red/20 text-reject-red border border-reject-red hover:bg-reject-red hover:text-pure-white transition-all font-black text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_down" data-weight="fill" style="font-variation-settings: 'FILL' 1;">thumb_down</span>
+<span>156</span>
+</button>
+</div>
+<div class="text-right">
+<span class="font-score text-reject-red text-score tracking-tighter">84%</span>
+<p class="text-[10px] font-bold text-muted-zinc uppercase">RELIABILITY</p>
+</div>
+</div>
+</article>
+<!-- Feed Item 3 -->
+<article class="bg-combat-gray border-l-4 border-secondary p-md space-y-md shadow-lg">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full border-2 border-secondary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Futuristic cyborg pilot avatar with a glowing mechanical jaw and steel plating" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMEjf-6WJg-HzMbA9pZeN585iADcGCJn7QfXgQfLY1n2LKQ-L_BWrnbzYd5ORmzOcqpwHCRykSBsh810rmimjHGVOFxULukmUq9mnRnKk206jW7ry-Hh0qJzIRyyJwttEujXzQyEuouu-ObblzBub1gI1SZsdQlxpzHFD7BbVY_ewgufHLNczRmrSaAbhJmwnmCMcC4IaQH2prMSJk3h7Nflr-mAeQ7pe6yxmXiiryLr7jiok1SchAnec5pBdAnul1wBpMkMMLbPcN"/>
+</div>
+<div>
+<p class="font-inter font-black text-secondary text-card-title">SONIC_BOOM</p>
+<p class="text-[10px] text-muted-zinc font-bold uppercase tracking-tighter">POSTED 12H AGO</p>
+</div>
+</div>
+<span class="bg-secondary/20 text-secondary border border-secondary px-2 py-0.5 text-[10px] font-black uppercase tracking-widest">MUSIC</span>
+</div>
+<div class="p-6 bg-gradient-to-br from-char-black to-zinc-800 border border-secondary/30 flex items-center gap-md">
+<div class="w-16 h-16 bg-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-char-black text-4xl" data-icon="graphic_eq">graphic_eq</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-on-background uppercase tracking-tight">OPERATIONAL TEMPO - VOL 4</p>
+<div class="w-full bg-combat-gray h-1 mt-2">
+<div class="bg-secondary h-full w-2/3"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-zinc-500/30">
+<div class="flex items-center gap-xs">
+<button class="flex items-center gap-xs px-3 py-1.5 bg-char-black text-muted-zinc border border-combat-gray hover:border-success-green hover:text-success-green transition-all font-black text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_up">thumb_up</span>
+<span>4.5K</span>
+</button>
+<button class="flex items-center gap-xs px-3 py-1.5 bg-char-black text-muted-zinc border border-combat-gray hover:border-reject-red hover:text-reject-red transition-all font-black text-xs">
+<span class="material-symbols-outlined text-sm" data-icon="thumb_down">thumb_down</span>
+<span>12</span>
+</button>
+</div>
+<div class="text-right">
+<span class="font-score text-success-green text-score tracking-tighter">99%</span>
+<p class="text-[10px] font-bold text-muted-zinc uppercase">AUDITORY RATING</p>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-zinc-900 dark:bg-[#1A1A1A] border-t-2 border-zinc-700 dark:border-[#4A4A4A] flex justify-around items-stretch h-16 shadow-2xl">
+<a class="flex flex-col items-center justify-center text-yellow-500 bg-zinc-800 dark:bg-[#4A4A4A] rounded-none border-t-4 border-yellow-500 p-2 w-full transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="rss_feed" data-weight="fill" style="font-variation-settings: 'FILL' 1;">rss_feed</span>
+<span class="font-inter font-bold text-[10px] uppercase tracking-tighter mt-1">FEED</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 p-2 w-full hover:text-yellow-300 transition-all group" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-inter font-bold text-[10px] uppercase tracking-tighter mt-1">DASHBOARD</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 p-2 w-full hover:text-yellow-300 transition-all group" href="#">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+<span class="font-inter font-bold text-[10px] uppercase tracking-tighter mt-1">ACCOUNT</span>
+</a>
+</nav>
+<!-- Floating Action Button - Deploy Content -->
+<button class="fixed bottom-20 right-6 w-14 h-14 bg-blood-red text-pure-white flex items-center justify-center rounded-none border-2 border-secondary shadow-[0_0_15px_rgba(139,0,0,0.5)] active:scale-95 transition-transform z-40">
+<span class="material-symbols-outlined text-3xl" data-icon="upload_file">upload_file</span>
+</button>
+</body></html>

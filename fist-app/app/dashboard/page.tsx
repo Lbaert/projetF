@@ -12,6 +12,8 @@ export default function DashboardPage() {
     totalPosts: 0,
     totalParticipants: 0,
     totalVotes: 0,
+    totalUpvotes: 0,
+    totalDownvotes: 0,
     byType: { clip: 0, music: 0, reference: 0, soundboard: 0 },
   })
   const [participants, setParticipants] = useState<any[]>([])
@@ -27,10 +29,16 @@ export default function DashboardPage() {
         .select('*, user:users(*), votes(value)')
 
       if (posts) {
+        const allVotes = posts.flatMap((p: any) => p.votes || [])
+        const upvotes = allVotes.filter((v: any) => v.value === 1).length
+        const downvotes = allVotes.filter((v: any) => v.value === -1).length
+
         setStats({
           totalPosts: posts.length,
           totalParticipants: new Set(posts.map((p: any) => p.user_id)).size,
-          totalVotes: posts.reduce((acc: number, p: any) => acc + (p.votes?.length || 0), 0),
+          totalVotes: allVotes.length,
+          totalUpvotes: upvotes,
+          totalDownvotes: downvotes,
           byType: {
             clip: posts.filter((p: any) => p.type === 'clip').length,
             music: posts.filter((p: any) => p.type === 'music').length,
@@ -79,15 +87,22 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold text-[#C9A227]">Dashboard</h1>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
         <StatsCard title="Total Posts" value={stats.totalPosts} icon="📝" />
         <StatsCard title="Participants" value={stats.totalParticipants} icon="👥" />
         <StatsCard title="Total Votes" value={stats.totalVotes} icon="🗳️" />
+        <StatsCard title="Ratio 👍/👎" value={stats.totalDownvotes ? `${(stats.totalUpvotes / stats.totalDownvotes).toFixed(1)}:1` : `${stats.totalUpvotes}:0`} icon="📈" />
         <StatsCard
           title="Score Moyen"
           value={stats.totalPosts ? Math.round(stats.totalVotes / stats.totalPosts * 10) / 10 : 0}
           icon="📊"
         />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <StatsCard title="👍 Upvotes" value={stats.totalUpvotes} icon="👍" />
+        <StatsCard title="👎 Downvotes" value={stats.totalDownvotes} icon="👎" />
+        <StatsCard title="Ratio Up/Down" value={`${Math.round(stats.totalUpvotes / (stats.totalUpvotes + stats.totalDownvotes || 1) * 100)}%`} icon="📊" />
       </div>
 
       <h2 className="text-xl font-bold mb-4">Répartition par Type</h2>

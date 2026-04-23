@@ -96,10 +96,6 @@ export function useAuth() {
                 .then(res => res.json())
                 .then(async (roleData) => {
                   if (roleData.role && roleData.role !== data.role) {
-                    await supabase
-                      .from('users')
-                      .update({ role: roleData.role })
-                      .eq('id', session.user.id)
                     setUser({ ...data, role: roleData.role })
                   }
                 })

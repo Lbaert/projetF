@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FIST PROTOCOL | COMMANDER PROFILE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#919283",
+                        "surface-variant": "#353530",
+                        "success-green": "#22C55E",
+                        "on-primary": "#2d3404",
+                        "surface-container-highest": "#353530",
+                        "secondary-fixed-dim": "#ecc246",
+                        "nav-bg": "#2A2A2A",
+                        "on-tertiary-container": "#dab4e2",
+                        "tertiary": "#e0bae8",
+                        "reject-red": "#DC2626",
+                        "inverse-on-surface": "#31312c",
+                        "surface-container-high": "#2a2a25",
+                        "tertiary-fixed-dim": "#e0bae8",
+                        "surface-container-lowest": "#0e0e0a",
+                        "on-tertiary-fixed": "#2b1034",
+                        "on-secondary": "#3d2e00",
+                        "on-primary-fixed-variant": "#434b18",
+                        "on-tertiary-fixed-variant": "#593c62",
+                        "on-error": "#690005",
+                        "on-tertiary": "#41264a",
+                        "surface-container": "#20201b",
+                        "background": "#13140f",
+                        "on-primary-container": "#bdc787",
+                        "pending-amber": "#F59E0B",
+                        "tertiary-container": "#62446b",
+                        "surface-tint": "#c3cc8c",
+                        "tertiary-fixed": "#f9d8ff",
+                        "primary": "#c3cc8c",
+                        "on-error-container": "#ffdad6",
+                        "on-surface": "#e5e2db",
+                        "char-black": "#1A1A1A",
+                        "surface-bright": "#393934",
+                        "surface-container-low": "#1c1c17",
+                        "on-secondary-fixed-variant": "#584400",
+                        "inverse-primary": "#5a632e",
+                        "blood-red": "#8B0000",
+                        "muted-zinc": "#71717A",
+                        "error": "#ffb4ab",
+                        "on-surface-variant": "#c8c7b8",
+                        "surface": "#13140f",
+                        "primary-container": "#4b5320",
+                        "secondary": "#ecc246",
+                        "combat-gray": "#4A4A4A",
+                        "on-secondary-fixed": "#241a00",
+                        "primary-fixed-dim": "#c3cc8c",
+                        "on-primary-fixed": "#191e00",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#dfe8a6",
+                        "on-background": "#e5e2db",
+                        "surface-dim": "#13140f",
+                        "outline-variant": "#47483c",
+                        "pure-white": "#FFFFFF",
+                        "on-secondary-container": "#352800",
+                        "secondary-fixed": "#ffe08e",
+                        "inverse-surface": "#e5e2db",
+                        "secondary-container": "#b18c09"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "max-width-dashboard": "1400px",
+                        "lg": "32px",
+                        "xl": "64px",
+                        "base": "4px",
+                        "xs": "8px",
+                        "max-width-feed": "800px"
+                    },
+                    "fontFamily": {
+                        "body": ["Inter"],
+                        "score": ["Inter"],
+                        "card-title": ["Inter"],
+                        "meta": ["Inter"],
+                        "h2": ["Inter"],
+                        "h1": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "score": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "card-title": ["16px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                        "meta": ["14px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "h2": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #13140f;
+            color: #e5e2db;
+        }
+    </style>
+</head>
+<body class="font-body text-body">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full border-b-2 border-[#D4AF37] bg-[#1A1A1A] z-50">
+<div class="flex justify-between items-center w-full px-12 py-6 max-w-[1920px] mx-auto">
+<div class="text-4xl font-black italic tracking-widest text-[#D4AF37] font-inter uppercase">
+                FIST
+            </div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-zinc-500 hover:text-[#D4AF37] transition-colors duration-100 font-inter font-black tracking-tighter uppercase" href="#">FEED</a>
+<a class="text-zinc-500 hover:text-[#D4AF37] transition-colors duration-100 font-inter font-black tracking-tighter uppercase" href="#">DASHBOARD</a>
+<a class="text-[#D4AF37] border-b-4 border-[#D4AF37] pb-1 font-inter font-black tracking-tighter uppercase" href="#">ACCOUNT</a>
+</nav>
+<div class="flex items-center gap-6">
+<button class="bg-blood-red text-pure-white px-6 py-2 font-inter font-black tracking-tighter uppercase active:scale-95 transition-all">
+                    DEPLOY
+                </button>
+<div class="w-10 h-10 border-2 border-[#D4AF37] bg-combat-gray overflow-hidden">
+<img alt="Elite Commander Profile" class="w-full h-full object-cover" data-alt="close-up of a stoic soldier with glowing cybernetic eye and battle-worn metallic helmet in a gritty high-contrast style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_AgEyjMlbtp4cFKwUVfeGEWwQXiIyzMBBUYoNJ7qtQ56l64zy4NpiwiHxxq22iO1LO6mPqHxgvTOVaEYPibc-6-K1J7wJ1tVkwy_RWGLEIZWPjzjiHMpE2f_9jtRvHW5sSv8n8RJcJ3WT3gyYM0jRRJTRwr9KZwpuWcYftWG13TZdu1Oh58zMwAr8rwLN8uLXtmhXQtmaOQIxDj1u30dyRxZHWXPLjNifUTatD_1DQCNNpYYRK6eC9HD9ibhQTdH-8tizbkCuqP3x"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 pt-24 flex flex-col h-full w-72 border-r-2 border-[#4A4A4A] bg-[#1A1A1A] z-40 hidden xl:flex">
+<div class="px-6 py-8 border-b border-[#4A4A4A] mb-4">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-[#D4AF37]" data-icon="shield">shield</span>
+<span class="text-[#D4AF37] font-black font-inter tracking-widest uppercase">COMMAND CENTER</span>
+</div>
+<p class="text-zinc-500 text-[10px] tracking-[0.2em] font-bold">SECTOR-01 STATUS: ACTIVE</p>
+</div>
+<nav class="flex-grow">
+<a class="flex items-center gap-4 text-zinc-500 py-4 px-6 hover:bg-zinc-800/30 hover:border-r-4 hover:border-[#D4AF37] transition-all font-inter text-sm font-bold tracking-widest uppercase" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span> INTEL
+            </a>
+<a class="flex items-center gap-4 text-zinc-500 py-4 px-6 hover:bg-zinc-800/30 hover:border-r-4 hover:border-[#D4AF37] transition-all font-inter text-sm font-bold tracking-widest uppercase" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span> ARMORY
+            </a>
+<a class="flex items-center gap-4 text-zinc-500 py-4 px-6 hover:bg-zinc-800/30 hover:border-r-4 hover:border-[#D4AF37] transition-all font-inter text-sm font-bold tracking-widest uppercase" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span> SQUAD
+            </a>
+<a class="flex items-center gap-4 text-zinc-500 py-4 px-6 hover:bg-zinc-800/30 hover:border-r-4 hover:border-[#D4AF37] transition-all font-inter text-sm font-bold tracking-widest uppercase" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span> REPORTS
+            </a>
+<a class="flex items-center gap-4 bg-zinc-800 text-[#D4AF37] border-l-4 border-[#D4AF37] py-4 px-6 font-inter text-sm font-bold tracking-widest uppercase" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span> SETTINGS
+            </a>
+</nav>
+<div class="p-6">
+<button class="w-full bg-[#D4AF37] text-char-black py-4 font-inter text-sm font-black tracking-widest uppercase active:translate-x-1 transition-all">
+                VOTE PROTOCOL
+            </button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="xl:ml-72 pt-32 pb-16 px-6 md:px-12 max-w-[1920px] mx-auto min-h-screen">
+<!-- Profile Header -->
+<section class="mb-12 bg-combat-gray p-8 border-l-8 border-[#D4AF37] relative overflow-hidden">
+<div class="absolute right-0 top-0 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[200px]" data-icon="military_tech">military_tech</span>
+</div>
+<div class="flex flex-col md:flex-row gap-8 items-center md:items-end relative z-10">
+<div class="w-40 h-40 border-4 border-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,0.2)] bg-char-black">
+<img alt="Lycanthrope Commander" class="w-full h-full object-cover" data-alt="high contrast digital portrait of an elite soldier wearing a wolf-styled tactical helmet in dark gray and gold" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4KthEL4bZuedfXHA2k_Dkvpmk_x5sTX3RQvgmO9dMycYIG3oVpeLsIaxMLBkGGhEguqaLuBFFg_PoPnSxdvCg-XQm88Dpx9Mlu3JsqJJPRDrhWeN9LPJ5N75CFEvoEeHGel0-ca3A3_cPTfaj7UT122lEF4BUbs_Z16UeqjKabqg44qG1f-9FLy6YAPbxZxtEo-oyt_ZQqltxYRGkkh7LW1aJGMDgIn3YAZ2p3e4FLItIaJI5jsEE57YJCmort5WocIXjp-IwCcQQ"/>
+</div>
+<div class="flex-grow text-center md:text-left">
+<div class="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-2">
+<h1 class="font-h1 text-h1 text-[#D4AF37] tracking-tighter uppercase italic">Lycanthrope</h1>
+<span class="bg-blood-red text-pure-white px-3 py-1 font-bold text-xs tracking-widest uppercase">LEVEL 99</span>
+</div>
+<div class="flex items-center justify-center md:justify-start gap-2 text-muted-zinc font-inter font-bold tracking-widest uppercase text-sm">
+<span class="material-symbols-outlined text-xs" data-icon="verified">verified</span>
+                        ELITE COMMANDER
+                    </div>
+</div>
+<div class="flex gap-4">
+<button class="bg-[#D4AF37] text-char-black px-6 py-3 font-inter font-black tracking-widest uppercase active:scale-95 transition-all text-sm">
+                        EDIT TACTICAL INTEL
+                    </button>
+<button class="border-2 border-combat-gray hover:border-[#D4AF37] text-pure-white p-3 transition-all">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Stats Grid -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+<div class="bg-char-black border border-combat-gray p-6 flex flex-col items-center text-center">
+<span class="text-muted-zinc font-inter text-xs font-bold tracking-widest uppercase mb-2">RANK</span>
+<span class="font-score text-score text-[#D4AF37] italic">#042</span>
+</div>
+<div class="bg-char-black border border-combat-gray p-6 flex flex-col items-center text-center">
+<span class="text-muted-zinc font-inter text-xs font-bold tracking-widest uppercase mb-2">POSTS</span>
+<span class="font-score text-score text-[#D4AF37]">1,284</span>
+</div>
+<div class="bg-char-black border border-combat-gray p-6 flex flex-col items-center text-center">
+<span class="text-muted-zinc font-inter text-xs font-bold tracking-widest uppercase mb-2">AVG APPROVAL</span>
+<span class="font-score text-score text-success-green">94%</span>
+</div>
+<div class="bg-char-black border border-combat-gray p-6 flex flex-col items-center text-center">
+<span class="text-muted-zinc font-inter text-xs font-bold tracking-widest uppercase mb-2">HONOR SCORE</span>
+<span class="font-score text-score text-secondary">8.9K</span>
+</div>
+</section>
+<!-- Tabs -->
+<nav class="flex border-b border-combat-gray mb-8">
+<button class="px-8 py-4 text-[#D4AF37] border-b-4 border-[#D4AF37] font-inter font-black tracking-widest uppercase text-sm">
+                RECENT SUBMISSIONS
+            </button>
+<button class="px-8 py-4 text-muted-zinc hover:text-[#D4AF37] transition-all font-inter font-black tracking-widest uppercase text-sm">
+                SAVED INTEL
+            </button>
+</nav>
+<!-- Submissions Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<article class="bg-combat-gray border border-[#4A4A4A] flex flex-col">
+<div class="h-48 overflow-hidden">
+<img alt="Tactical Intel" class="w-full h-full object-cover" data-alt="cinematic wide shot of a futuristic battlefield at night with neon blue highlights and heavy fog" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDslvGL-Q1uX7wTG3qyTFg83P70--Azn7Uh_GaNCLPb4DpLDZREMvA9BEhPJjWSq4WrLi_tglFO7EA8s4pNEqBuod0qb5bN-EGCEiHtg3BKIYmkhuUDUWsTIeOcuVrzwzxrqDGB97ud1RQDHEKFO0SogI1aUTAmNw9Eqk_KYBKaxVzCxILEVH4HHO_vMLnfODWtPZAzUv4JSa_lMTzeUAJdN_F8_X3lWfwAUuLY4mqrGMjJDIUhN7PCRhQ1uueN5xcZXQf-HvQ8oXGt"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-char-black text-[#D4AF37] text-[10px] px-2 py-1 font-bold tracking-tighter uppercase border border-[#D4AF37]">STRATAGEM</span>
+<span class="text-muted-zinc text-xs">2H AGO</span>
+</div>
+<h3 class="font-card-title text-card-title text-pure-white mb-4 uppercase">Operation: Silent Wolf Protocol - Redux</h3>
+<div class="flex items-center gap-4 pt-4 border-t border-[#3A3A3A]">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-success-green text-sm" data-icon="thumb_up">thumb_up</span>
+<span class="text-sm font-bold">1.2K</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-reject-red text-sm" data-icon="thumb_down">thumb_down</span>
+<span class="text-sm font-bold">42</span>
+</div>
+<div class="ml-auto text-[#D4AF37] font-black text-sm italic">97%</div>
+</div>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-combat-gray border border-[#4A4A4A] flex flex-col">
+<div class="h-48 overflow-hidden">
+<img alt="Tactical Intel" class="w-full h-full object-cover" data-alt="macro close-up of high-tech military hardware circuit boards with glowing amber indicators" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9yu7cSVG9QROjaYVM3PmJQN46j_ZG6wpSIyKVFrx25k4oc0ehNY2XJ9zKOCnN-ARvYNWKDxv4sfbLyMtmipG_lCeMCXIR_jO6dU15Pbr5-ejfRVPNXPfE3LVgWCjNkSnKv1cuTnw4niCQdJcol2A8rPJqL6cV6Euq3Np-9OjtxwZimsaSTPH5L0THP_6qVC8197GcT6GImqlOdKkbhXsy4y9pTBLeWKNaWWeFDMUjhNBWAO9HrsFxBTbOc5Dq763v3fxejFMkgvPu"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-char-black text-[#D4AF37] text-[10px] px-2 py-1 font-bold tracking-tighter uppercase border border-[#D4AF37]">ARMORY-LOG</span>
+<span class="text-muted-zinc text-xs">1D AGO</span>
+</div>
+<h3 class="font-card-title text-card-title text-pure-white mb-4 uppercase">Weapon Calibration: MK-IV Railgun Variance</h3>
+<div class="flex items-center gap-4 pt-4 border-t border-[#3A3A3A]">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-success-green text-sm" data-icon="thumb_up">thumb_up</span>
+<span class="text-sm font-bold">850</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-reject-red text-sm" data-icon="thumb_down">thumb_down</span>
+<span class="text-sm font-bold">12</span>
+</div>
+<div class="ml-auto text-[#D4AF37] font-black text-sm italic">99%</div>
+</div>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-combat-gray border border-[#4A4A4A] flex flex-col">
+<div class="h-48 overflow-hidden">
+<img alt="Tactical Intel" class="w-full h-full object-cover" data-alt="aerial drone view of a fortified desert outpost with satellite dishes and military transports" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHjkARRYQEEx_n-HdZxPnfSyEk3RYgggPS8UGQ75LdJqUmuyXhwsXXHIHyEeorwvxa3aYghFFoVrMHW3Uq5tCvsFyYSpQ5FrkYpz-jzaT1-oVE2Z9XDnWPYO97j2VSlEQeZ90jGOnHtqS4NRS847tss9col4OiRsVbcPHxeDjSQeuhEsV0nvtGUmxGUotLYRK3BTk5GJIPLsc00fkpasQ6Hdg0zEMNqYOM_zrI3gn1A_SN2WQ7aeqsRzuIfEMY3hIJXqn_v7oepYhM"/>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-4">
+<span class="bg-char-black text-[#D4AF37] text-[10px] px-2 py-1 font-bold tracking-tighter uppercase border border-[#D4AF37]">INTEL-ALERT</span>
+<span class="text-muted-zinc text-xs">3D AGO</span>
+</div>
+<h3 class="font-card-title text-card-title text-pure-white mb-4 uppercase">Sector-09 Border Breach: Analysis Report</h3>
+<div class="flex items-center gap-4 pt-4 border-t border-[#3A3A3A]">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-success-green text-sm" data-icon="thumb_up">thumb_up</span>
+<span class="text-sm font-bold">3.4K</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-reject-red text-sm" data-icon="thumb_down">thumb_down</span>
+<span class="text-sm font-bold">450</span>
+</div>
+<div class="ml-auto text-[#D4AF37] font-black text-sm italic">88%</div>
+</div>
+</div>
+</article>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-[#4A4A4A] bg-[#1A1A1A] mt-auto">
+<div class="w-full py-8 px-12 flex flex-col md:flex-row justify-between items-center max-w-[1920px] mx-auto">
+<div class="text-[#D4AF37] font-bold font-inter text-xs tracking-widest uppercase mb-4 md:mb-0">
+                FIST PROTOCOL
+            </div>
+<div class="text-[#4A4A4A] font-inter text-xs tracking-widest uppercase mb-4 md:mb-0">
+                © 2024 FIST PROTOCOL. AUTHORIZED PERSONNEL ONLY.
+            </div>
+<div class="flex gap-8">
+<a class="text-zinc-600 hover:text-zinc-300 transition-opacity duration-300 font-inter text-xs tracking-widest uppercase" href="#">TERMS OF ENGAGEMENT</a>
+<a class="text-zinc-600 hover:text-zinc-300 transition-opacity duration-300 font-inter text-xs tracking-widest uppercase" href="#">PRIVACY BYPASS</a>
+<a class="text-zinc-600 hover:text-zinc-300 transition-opacity duration-300 font-inter text-xs tracking-widest uppercase" href="#">ENCRYPTED CONTACT</a>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FIST - The Elite Highlight Platform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#e5e2db",
+                        "on-secondary-fixed": "#241a00",
+                        "on-primary": "#2d3404",
+                        "surface-variant": "#353530",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#2b1034",
+                        "on-surface-variant": "#c8c7b8",
+                        "surface-tint": "#c3cc8c",
+                        "surface-container-highest": "#353530",
+                        "pure-white": "#FFFFFF",
+                        "tertiary-fixed-dim": "#e0bae8",
+                        "on-secondary-container": "#352800",
+                        "on-primary-fixed-variant": "#434b18",
+                        "primary-container": "#4b5320",
+                        "inverse-primary": "#5a632e",
+                        "error": "#ffb4ab",
+                        "primary-fixed": "#dfe8a6",
+                        "surface-container": "#20201b",
+                        "on-tertiary-fixed-variant": "#593c62",
+                        "success-green": "#22C55E",
+                        "nav-bg": "#2A2A2A",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#bdc787",
+                        "surface-dim": "#13140f",
+                        "tertiary-container": "#62446b",
+                        "surface-container-low": "#1c1c17",
+                        "surface-container-high": "#2a2a25",
+                        "on-secondary-fixed-variant": "#584400",
+                        "char-black": "#1A1A1A",
+                        "secondary-fixed": "#ffe08e",
+                        "on-primary-fixed": "#191e00",
+                        "outline-variant": "#47483c",
+                        "surface": "#13140f",
+                        "inverse-surface": "#e5e2db",
+                        "primary": "#c3cc8c",
+                        "primary-fixed-dim": "#c3cc8c",
+                        "muted-zinc": "#71717A",
+                        "tertiary": "#e0bae8",
+                        "inverse-on-surface": "#31312c",
+                        "on-tertiary": "#41264a",
+                        "on-secondary": "#3d2e00",
+                        "surface-container-lowest": "#0e0e0a",
+                        "background": "#13140f",
+                        "outline": "#919283",
+                        "secondary-container": "#b18c09",
+                        "secondary": "#ecc246",
+                        "surface-bright": "#393934",
+                        "pending-amber": "#F59E0B",
+                        "combat-gray": "#4A4A4A",
+                        "on-error-container": "#ffdad6",
+                        "blood-red": "#8B0000",
+                        "reject-red": "#DC2626",
+                        "secondary-fixed-dim": "#ecc246",
+                        "on-surface": "#e5e2db",
+                        "tertiary-fixed": "#f9d8ff",
+                        "on-tertiary-container": "#dab4e2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "32px",
+                        "max-width-dashboard": "1400px",
+                        "xs": "8px",
+                        "md": "16px",
+                        "max-width-feed": "800px",
+                        "base": "4px",
+                        "xl": "64px"
+                    },
+                    "fontFamily": {
+                        "card-title": ["Inter"],
+                        "meta": ["Inter"],
+                        "score": ["Inter"],
+                        "body": ["Inter"],
+                        "h2": ["Inter"],
+                        "h1": ["Inter"]
+                    },
+                    "fontSize": {
+                        "card-title": ["16px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                        "meta": ["14px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "score": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "body": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h2": ["32px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "h1": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.propaganda-texture {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuCozWw1ejjoPVj7WL1kAPlxYOzpoCtEGfBsjtnTObVUCFu1vXBpn36z2FVOHm_c_dPg8F8cp3IoGCbo9NwZLVV2dRacD4sZ2TV0maq23ZFNk-ZsmlPVYDqcM8ce4AkJ-2Z7ergJns3otsYMC1X3duvF1wzmQd1oULQle4DqJILePGtITXVTwrroF2MpNX6MkvzLvbI801Hw8U0O_cstc_l5cNwoNajs53Gf8whGumCHHLvN9Irw3XOmFeKjTJpbT-sPUM-25G5g0zME), linear-gradient(rgba(26, 26, 26, 0.95), rgba(26, 26, 26, 0.95))
+    }
+.glow-gold {
+    text-shadow: 0 0 20px rgba(236, 194, 70, 0.3)
+    }</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-char-black text-on-background font-body min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Subtle WWII Pattern Background -->
+<div class="fixed inset-0 opacity-10 pointer-events-none mix-blend-overlay propaganda-texture z-0" data-alt="Distressed vintage paper texture with subtle geometric propaganda patterns and grainy film overlay for military aesthetic">
+</div>
+<!-- TopAppBar Navigation -->
+<header class="bg-zinc-900 dark:bg-[#1A1A1A] border-b-2 border-zinc-700 dark:border-[#4A4A4A] flex justify-between items-center w-full px-6 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-yellow-500 dark:text-yellow-400 text-3xl" data-icon="military_tech">military_tech</span>
+<span class="font-inter font-black uppercase tracking-widest text-2xl text-yellow-500 dark:text-yellow-400 italic">FIST</span>
+</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-inter font-black uppercase tracking-widest text-yellow-500 font-bold hover:bg-zinc-800 transition-colors px-4 py-2" href="#">FEED</a>
+<a class="font-inter font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 hover:bg-zinc-800 transition-colors px-4 py-2" href="#">DASHBOARD</a>
+<a class="font-inter font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 hover:bg-zinc-800 transition-colors px-4 py-2" href="#">ACCOUNT</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full border-2 border-yellow-500 bg-combat-gray flex items-center justify-center overflow-hidden">
+<img alt="Elite Operator Avatar" class="w-full h-full object-cover" data-alt="Close-up portrait of a tactical operator wearing a headset and dark aviators in a dimly lit high-tech environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm04XvxP2cZj0IMpCt-JKfvAVjVa1p0IY-613JKD95i3-pKqHgwPcDFiN9oab5ksUzDnhQp8eSjd-mT9Qzuqz_4j6bqLs2oMjv0tr80H7C7-Eumaciy-rwgwAu_4e68Yhmuc_RHe5olW9Odsw2qa-uh5PV-_X8vXJIqCHre-KxYal9UETlErrk3IDGf_Tk9WGLq0FLewL9PNyWVIpJDdlQr5afoaRmUvXuZJw69WPePaE71GUNZ1_k7hoaBxssSOmWudWyUCFhr0zg"/>
+</div>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center px-4 relative z-10 py-xl">
+<!-- Hero Section -->
+<section class="text-center max-w-4xl mx-auto space-y-md">
+<div class="inline-block border-2 border-secondary px-6 py-2 mb-md bg-secondary/5">
+<span class="font-inter font-black uppercase tracking-[0.3em] text-secondary text-sm">Operation Active</span>
+</div>
+<h1 class="font-h1 text-h1 text-secondary uppercase tracking-tighter italic glow-gold">
+                FIST
+            </h1>
+<p class="font-h2 text-h2 text-on-surface max-w-2xl mx-auto uppercase tracking-wide leading-tight">
+                The Elite Highlight Platform
+            </p>
+<p class="font-body text-muted-zinc text-lg max-w-lg mx-auto pb-lg">
+                Archive your tactical dominance. Submit highlights. Climb the command hierarchy. Only the elite survive the vote.
+            </p>
+<!-- Primary CTA -->
+<div class="flex flex-col items-center gap-md">
+<button class="group relative bg-primary-container text-on-primary-container px-12 py-5 font-inter font-black uppercase tracking-widest flex items-center gap-3 border-b-4 border-r-4 border-on-primary active:translate-y-[2px] active:translate-x-[2px] active:border-b-0 active:border-r-0 transition-all">
+<span class="material-symbols-outlined text-2xl" data-icon="discord">stadium</span>
+                    Login with Discord
+                </button>
+<span class="text-xs font-meta text-combat-gray uppercase tracking-widest">Authorized Personnel Only</span>
+</div>
+</section>
+<!-- Feature Bento Grid (Brief Overview) -->
+<section class="mt-xl grid grid-cols-1 md:grid-cols-3 gap-md w-full max-w-5xl">
+<div class="bg-surface-container border border-combat-gray p-md flex flex-col gap-xs hover:border-secondary transition-all">
+<span class="material-symbols-outlined text-secondary" data-icon="workspace_premium">workspace_premium</span>
+<h3 class="font-card-title text-card-title text-secondary uppercase">Tactical Ranking</h3>
+<p class="font-meta text-muted-zinc">Proprietary scoring system based on community recognition and engagement metrics.</p>
+</div>
+<div class="bg-surface-container border border-combat-gray p-md flex flex-col gap-xs hover:border-secondary transition-all">
+<span class="material-symbols-outlined text-secondary" data-icon="shield">shield</span>
+<h3 class="font-card-title text-card-title text-secondary uppercase">Secure Auth</h3>
+<p class="font-meta text-muted-zinc">Military-grade Discord integration for seamless squad coordination and identity verification.</p>
+</div>
+<div class="bg-surface-container border border-combat-gray p-md flex flex-col gap-xs hover:border-secondary transition-all">
+<span class="material-symbols-outlined text-secondary" data-icon="target">target</span>
+<h3 class="font-card-title text-card-title text-secondary uppercase">Combat Feed</h3>
+<p class="font-meta text-muted-zinc">High-intensity stream of the world's most aggressive highlights, curated by the community.</p>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Visible on Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-stretch h-16 bg-zinc-900 dark:bg-[#1A1A1A] border-t-2 border-zinc-700 dark:border-[#4A4A4A] md:hidden">
+<a class="flex flex-col items-center justify-center text-yellow-500 bg-zinc-800 dark:bg-[#4A4A4A] rounded-none border-t-4 border-yellow-500 p-2 flex-1" href="#">
+<span class="material-symbols-outlined" data-icon="rss_feed">rss_feed</span>
+<span class="font-inter font-bold text-[10px] uppercase tracking-tighter">FEED</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 p-2 flex-1 hover:text-yellow-300 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-inter font-bold text-[10px] uppercase tracking-tighter">DASHBOARD</span>
+</a>
+<a class="flex flex-col items-center justify-center text-zinc-500 dark:text-zinc-400 p-2 flex-1 hover:text-yellow-300 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+<span class="font-inter font-bold text-[10px] uppercase tracking-tighter">ACCOUNT</span>
+</a>
+</nav>
+<!-- Visual Accents -->
+<div class="fixed bottom-12 right-12 z-20 pointer-events-none opacity-20 hidden lg:block">
+<div class="w-64 h-64 border-4 border-secondary/30 rounded-full flex items-center justify-center">
+<div class="w-48 h-48 border-2 border-secondary/20 rounded-full flex items-center justify-center">
+<div class="w-1 bg-secondary/40 h-full absolute transform rotate-45"></div>
+<div class="w-1 bg-secondary/40 h-full absolute transform -rotate-45"></div>
+</div>
+</div>
+</div>
+<footer class="mt-auto border-t-2 border-combat-gray bg-char-black py-md px-6 flex justify-between items-center relative z-10 text-[10px] font-meta text-combat-gray uppercase tracking-widest">
+<span>© FIST OPERATIONAL COMMAND 2024</span>
+<div class="flex gap-md">
+<a class="hover:text-secondary" href="#">Directives</a>
+<a class="hover:text-secondary" href="#">Protocols</a>
+<a class="hover:text-secondary" href="#">Classified</a>
+</div>
+</footer>
+</body></html>

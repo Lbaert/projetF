@@ -17,10 +17,14 @@ export async function POST() {
       return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const discordUserId = authUser.id
+    const discordUserId = authUser.user_metadata?.sub || authUser.user_metadata?.provider_id
 
     if (!DISCORD_BOT_TOKEN || !DISCORD_SERVER_ID) {
       return Response.json({ error: 'Discord not configured' }, { status: 500 })
+    }
+
+    if (!discordUserId) {
+      return Response.json({ error: 'Discord ID not found' }, { status: 400 })
     }
 
     const response = await fetch(

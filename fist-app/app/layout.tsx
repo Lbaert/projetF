@@ -1,10 +1,9 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Navbar } from '@/components/Navbar'
 
 export const metadata: Metadata = {
-  title: 'FIST - Fistinière Highlight',
-  description: 'Collective voting platform for Fist Discord',
+  title: 'FIST // La Fistinière',
+  description: 'Collective highlight voting platform - Hell Let Loose',
 }
 
 export default function RootLayout({
@@ -13,9 +12,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="fr">
-      <body className="bg-[#1A1A1A] text-white min-h-screen">
-        <Navbar />
+    <html lang="fr" className="dark">
+      <body className="bg-[#0a0a0a] text-[#e5e2e1] min-h-screen font-sans antialiased">
         {children}
       </body>
     </html>
