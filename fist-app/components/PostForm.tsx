@@ -11,7 +11,6 @@ interface PostFormProps {
 export function PostForm({ onSuccess }: PostFormProps) {
   const [type, setType] = useState<ContentType>('clip')
   const [content, setContent] = useState('')
-  const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const supabase = createClient()
 
@@ -20,22 +19,6 @@ export function PostForm({ onSuccess }: PostFormProps) {
     setUploading(true)
 
     try {
-      let filePath = null
-
-      if (type === 'soundboard' && file) {
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('soundboard')
-          .upload(`${Date.now()}-${file.name}`, file)
-
-        if (uploadError) throw uploadError
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('soundboard')
-          .getPublicUrl(uploadData.path)
-
-        filePath = publicUrl
-      }
-
       const { data: { user: authUser } } = await supabase.auth.getUser()
       const { data: dbUser } = await supabase
         .from('users')
@@ -46,14 +29,12 @@ export function PostForm({ onSuccess }: PostFormProps) {
       const { error } = await supabase.from('posts').insert({
         user_id: dbUser?.id,
         type,
-        content: type === 'soundboard' && file ? file.name : content,
-        file_path: filePath,
+        content,
       })
 
       if (error) throw error
 
       setContent('')
-      setFile(null)
       setType('clip')
       onSuccess()
     } catch (error) {
@@ -65,42 +46,56 @@ export function PostForm({ onSuccess }: PostFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-black border border-zinc-800 p-6 mb-8">
-      <h3 className="font-['Space_Grotesk'] text-lg font-bold text-[#bbf600] uppercase mb-6 tracking-tight">
-        Initiate Submission
-      </h3>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <form onSubmit={handleSubmit} className="bg-black border border-zinc-800 p-6 mb-8 w-full max-w-5xl mx-auto">
+      <div className="flex flex-wrap items-center justify-between">
         <div>
-          <label className="font-['Space_Grotesk'] text-[10px] text-zinc-500 uppercase block mb-2 tracking-widest">
-            Payload Type
-          </label>
-          <div className="grid grid-cols-2 gap-2">
-            {(['clip', 'music', 'reference', 'soundboard'] as ContentType[]).map((t) => (
+          <h1 className="font-display text-4xl font-bold text-white uppercase">LIVE_FEED</h1>
+          <h3 className="font-['Space_Grotesk'] text-lg font-bold text-[#bbf600] uppercase tracking-tight">
+            Initiate Submission
+          </h3>
+        </div>
+
+        <div className="flex items-center">
+          <div className="flex gap-0">
+            {(['clip', 'music', 'reference'] as ContentType[]).map((t) => (
               <button
                 key={t}
                 type="button"
                 onClick={() => setType(t)}
-                className={`px-3 py-2 font-['Space_Grotesk'] text-xs font-medium uppercase flex items-center gap-2 transition-all ${
+                className={`w-16 h-16 flex items-center justify-center transition-all ${
                   type === t
-                    ? 'bg-[#bbf600] text-black border border-[#bbf600]'
-                    : 'border border-zinc-800 text-zinc-400 hover:border-[#bbf600]/50 hover:text-white'
+                    ? 'bg-[#bbf600] text-black border-2 border-[#bbf600]'
+                    : 'border-2 border-zinc-800 hover:border-[#bbf600]/50'
                 }`}
               >
-                {t === 'clip' && '🎬'}
-                {t === 'music' && '🎵'}
-                {t === 'reference' && '💬'}
-                {t === 'soundboard' && '🔊'}
-                {t.charAt(0).toUpperCase() + t.slice(1)}
+                {t === 'clip' && (
+                  <img
+                    src="/video.webp"
+                    alt="Clip"
+                    className="w-14 h-14 object-contain"
+                    style={{ filter: type === t ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }}
+                  />
+                )}
+                {t === 'music' && (
+                  <img
+                    src="/audio.webp"
+                    alt="Audio"
+                    className="w-14 h-14 object-contain"
+                    style={{ filter: type === t ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }}
+                  />
+                )}
+                {t === 'reference' && (
+                  <img
+                    src="/texte.webp"
+                    alt="Texte"
+                    className="w-14 h-14 object-contain"
+                    style={{ filter: type === t ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }}
+                  />
+                )}
               </button>
             ))}
           </div>
-        </div>
 
-        <div className="flex flex-col">
-          <label className="font-['Space_Grotesk'] text-[10px] text-zinc-500 uppercase block mb-2 tracking-widest">
-            Source URL
-          </label>
           {(type === 'clip' || type === 'music') && (
             <input
               type="url"
@@ -108,45 +103,29 @@ export function PostForm({ onSuccess }: PostFormProps) {
               onChange={(e) => setContent(e.target.value)}
               placeholder="HTTPS://SOURCE_FEED.01"
               required
-              className="w-full bg-transparent border border-zinc-800 focus:border-[#bbf600] text-white font-['Space_Grotesk'] text-sm p-3 outline-none transition-colors placeholder:text-zinc-800"
+              className="h-16 flex-1 bg-transparent border-y-2 border-zinc-800 focus:border-[#bbf600] text-white font-['Space_Grotesk'] text-sm px-4 outline-none transition-colors placeholder:text-zinc-800"
             />
           )}
-
           {type === 'reference' && (
-            <textarea
+            <input
+              type="text"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="DESCRIBE THE ASSET..."
               required
-              rows={3}
-              className="w-full h-full bg-zinc-900/50 border border-zinc-800 focus:border-[#bbf600] text-white font-['Space_Grotesk'] text-sm p-3 outline-none transition-colors placeholder:text-zinc-800 resize-none"
+              className="h-16 flex-1 bg-transparent border-y-2 border-zinc-800 focus:border-[#bbf600] text-white font-['Space_Grotesk'] text-sm px-4 outline-none transition-colors placeholder:text-zinc-800"
             />
           )}
 
-          {type === 'soundboard' && (
-            <input
-              type="file"
-              accept=".mp3"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-              required
-              className="w-full bg-transparent border border-zinc-800 text-zinc-400 font-['Space_Grotesk'] text-xs p-3 file:mr-4 file:py-1 file:px-3 file:border file:border-zinc-700 file:text-xs file:font-['Space_Grotesk'] file:uppercase file:bg-zinc-800 file:text-zinc-300 hover:file:border-[#bbf600]"
-            />
-          )}
+          <button
+            type="submit"
+            disabled={uploading}
+            className="h-16 px-8 bg-[#bbf600] text-black font-['Space_Grotesk'] font-black text-xs uppercase tracking-wider hover:bg-[#a4d700] active:scale-95 transition-all disabled:opacity-50 flex items-center gap-2"
+          >
+            <span>INITIATE</span>
+            <span className="material-symbols-outlined text-lg">bolt</span>
+          </button>
         </div>
-      </div>
-
-      <div className="flex items-center gap-4 pt-4 border-t border-zinc-800">
-        <button
-          type="submit"
-          disabled={uploading}
-          className="px-8 py-3 bg-[#bbf600] text-black font-['Space_Grotesk'] font-black text-xs uppercase tracking-wider hover:bg-[#a4d700] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-        >
-          <span>INITIATE SUBMISSION</span>
-          <span className="material-symbols-outlined text-lg">bolt</span>
-        </button>
-        <span className="text-[10px] font-['Space_Grotesk'] text-zinc-600 uppercase">
-          {uploading ? 'Processing...' : 'Awaiting Input'}
-        </span>
       </div>
     </form>
   )

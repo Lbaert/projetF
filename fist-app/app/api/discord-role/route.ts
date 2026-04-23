@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN
 const DISCORD_SERVER_ID = process.env.DISCORD_SERVER_ID
@@ -9,13 +9,15 @@ const DISCORD_ROLE_FIST = process.env.DISCORD_ROLE_FIST
 
 export async function POST() {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     const { data: { user: authUser } } = await supabase.auth.getUser()
 
     if (!authUser) {
       return Response.json({ error: 'Not authenticated' }, { status: 401 })
     }
+
+    console.log('[Discord Role] Supabase User Auth:', authUser ? 'OK' : 'FAIL')
 
     const discordUserId = authUser.user_metadata?.sub || authUser.user_metadata?.provider_id
 
@@ -36,11 +38,11 @@ export async function POST() {
       }
     )
 
+    console.log('[Discord Role] Statut réponse Discord:', response.status)
     if (!response.ok) {
-      if (response.status === 404) {
-        return Response.json({ role: 'visitor' })
-      }
-      return Response.json({ error: 'Discord API error' }, { status: 500 })
+      const errorText = await response.text()
+      console.error('[Discord Role] Erreur API Discord:', errorText)
+      return Response.json({ error: 'Discord error', details: errorText }, { status: response.status })
     }
 
     const data = await response.json()
@@ -53,10 +55,13 @@ export async function POST() {
     else if (roleIds.includes(DISCORD_ROLE_PRIMATE || '')) appRole = 'primate'
     else if (roleIds.includes(DISCORD_ROLE_SINGE || '')) appRole = 'singe'
 
+    console.log('[Discord Role] Rôles reçus de Discord :', roleIds)
+    console.log('[Discord Role] Rôle calculé pour Supabase :', appRole)
+
     const { error: updateError } = await supabase
       .from('users')
       .update({ role: appRole })
-      .eq('id', discordUserId)
+      .eq('id', authUser.id)
 
     if (updateError) {
       console.error('[Discord Role] Update error:', updateError)
