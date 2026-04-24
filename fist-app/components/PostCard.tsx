@@ -163,7 +163,7 @@ export function PostCard({ post, canVote, canDelete, onDelete, selectionMode = f
           )}
         </div>
 
-        {!(post.type === 'clip' && isVideoUrl(post.content)) && (
+        {!(post.type === 'highlight' || (post.type === 'clip' && isVideoUrl(post.content))) && (
           <h3 className="font-['Space_Grotesk'] font-bold text-lg text-white uppercase leading-tight mb-4">
             {post.title || post.content}
           </h3>
@@ -171,7 +171,7 @@ export function PostCard({ post, canVote, canDelete, onDelete, selectionMode = f
 
         {post.type === 'soundboard' && post.file_path ? (
           <audio controls src={post.file_path} className="w-full mb-4" />
-        ) : post.type === 'clip' && isVideoUrl(post.content) ? (
+        ) : (post.type === 'highlight' || (post.type === 'clip' && isVideoUrl(post.content))) ? (
           <div className="relative w-full aspect-video bg-black mb-4 overflow-hidden -mx-4 -mt-4">
             <VideoThumbnail url={post.content} />
             <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-4 py-2 bg-black z-10">

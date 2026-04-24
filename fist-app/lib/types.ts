@@ -1,4 +1,4 @@
-export type ContentType = 'clip' | 'music' | 'reference' | 'soundboard'
+export type ContentType = 'clip' | 'music' | 'reference' | 'soundboard' | 'highlight'
 
 export type Role = 'visitor' | 'fist' | 'singe' | 'primate' | 'lycanthrope' | 'admin'
 

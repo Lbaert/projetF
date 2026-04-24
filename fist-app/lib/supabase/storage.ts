@@ -8,9 +8,9 @@ export async function uploadFile(
 ): Promise<string | null> {
   const supabase = createClient()
 
-  const timestamp = Date.now()
+  const uniqueId = crypto.randomUUID()
   const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
-  const filePath = `${folder}/${timestamp}_${sanitizedName}`
+  const filePath = `${folder}/${uniqueId}_${sanitizedName}`
 
   const { data, error } = await supabase.storage
     .from(BUCKET_NAME)

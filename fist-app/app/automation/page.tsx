@@ -86,6 +86,8 @@ export default function AutomationPage() {
   const [processing, setProcessing] = useState(false)
   const [progress, setProgress] = useState(0)
   const [logs, setLogs] = useState<string[]>([])
+  const [showResult, setShowResult] = useState(false)
+  const [results, setResults] = useState<{ postId: string; cuts: string[]; cutsStoragePaths: string[] }[]>([])
 
   const [params, setParams] = useState<ProcessingParams>({
     dbThreshold: -25,
@@ -131,6 +133,117 @@ export default function AutomationPage() {
     setLogs(prev => [...prev, `[${new Date().toLocaleTimeString()}] ${message}`])
   }
 
+  const handleKeepClip = async (cutUrl: string, cutStoragePath: string, sourcePostId: string) => {
+    const supabase = createClient()
+    await supabase.from('posts').insert({
+      user_id: user.id,
+      type: 'clip',
+      content: cutUrl,
+      file_path: cutStoragePath,
+      source_id: sourcePostId,
+    })
+    addLog(`Clip garde: ${cutUrl}`)
+    setResults(prev => prev.map(r => {
+      const idx = r.cuts.indexOf(cutUrl)
+      if (idx === -1) return r
+      const newCuts = [...r.cuts]
+      const newPaths = [...r.cutsStoragePaths]
+      newCuts.splice(idx, 1)
+      newPaths.splice(idx, 1)
+      return { ...r, cuts: newCuts, cutsStoragePaths: newPaths }
+    }))
+  }
+
+  const handleDeleteClip = async (cutUrl: string, cutStoragePath: string) => {
+    const supabase = createClient()
+    await supabase.storage.from('clips').remove([cutStoragePath])
+    addLog(`Clip supprime: ${cutStoragePath}`)
+    setResults(prev => prev.map(r => {
+      const idx = r.cuts.indexOf(cutUrl)
+      if (idx === -1) return r
+      const newCuts = [...r.cuts]
+      const newPaths = [...r.cutsStoragePaths]
+      newCuts.splice(idx, 1)
+      newPaths.splice(idx, 1)
+      return { ...r, cuts: newCuts, cutsStoragePaths: newPaths }
+    }))
+  }
+
+  const handleCreateHighlight = async () => {
+    setProcessing(true)
+    addLog('Création du highlight...')
+
+    try {
+      const supabase = createClient()
+      const { FFmpeg } = await import('@ffmpeg/ffmpeg')
+      const ffmpeg = new FFmpeg()
+
+      ffmpeg.on('log', ({ message }) => {
+        addLog(`FFmpeg: ${message}`)
+      })
+
+      const baseURL = '/'
+      await ffmpeg.load({
+        coreURL: `${baseURL}ffmpeg-core.js`,
+        wasmURL: `${baseURL}ffmpeg-core.wasm`,
+      })
+
+      const allCutStoragePaths = results.flatMap(r => r.cutsStoragePaths as string[])
+
+      if (allCutStoragePaths.length === 0) {
+        addLog('Aucun clip a assembler')
+        setProcessing(false)
+        return
+      }
+
+      addLog(`Téléchargement de ${allCutStoragePaths.length} clips...`)
+      for (let idx = 0; idx < allCutStoragePaths.length; idx++) {
+        const storagePath = allCutStoragePaths[idx]
+        const { data: cutData, error: cutError } = await supabase.storage.from('clips').download(storagePath)
+        if (cutError) {
+          addLog(`Erreur: ${cutError.message}`)
+          continue
+        }
+        const cutBuffer = new Uint8Array(await cutData.arrayBuffer())
+        await ffmpeg.writeFile(`cut_${idx}.mp4`, cutBuffer)
+        addLog(`Clip ${idx + 1} pret`)
+      }
+
+      addLog('Assemblage...')
+      const concatList = allCutStoragePaths.map((_, idx) => `file 'cut_${idx}.mp4'`).join('\n')
+      await ffmpeg.writeFile('concat.txt', concatList)
+      await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'concat.txt', '-c', 'copy', 'highlight.mp4'])
+
+      const highlightData = await ffmpeg.readFile('highlight.mp4')
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
+
+      const { data } = await supabase.storage.from('clips').upload(
+        `highlights/highlight_${timestamp}.mp4`,
+        highlightData,
+        { upsert: true }
+      )
+
+      if (data) {
+        const { data: urlData } = supabase.storage.from('clips').getPublicUrl(data.path)
+        const { error: insertError } = await supabase.from('posts').insert({
+          user_id: user.id,
+          type: 'highlight',
+          content: urlData.publicUrl,
+          file_path: data.path,
+        })
+        if (insertError) {
+          addLog(`Erreur insert: ${insertError.message}`)
+        } else {
+          addLog(`Highlight cree: ${urlData.publicUrl}`)
+        }
+      }
+    } catch (error) {
+      addLog(`Erreur highlight: ${error}`)
+    } finally {
+      setProcessing(false)
+    }
+  }
+
   const handleProcess = async () => {
     if (posts.length === 0) return
     setProcessing(true)
@@ -141,7 +254,6 @@ export default function AutomationPage() {
       addLog('Initialisation de FFmpeg...')
 
       const { FFmpeg } = await import('@ffmpeg/ffmpeg')
-      const { toBlobURL } = await import('@ffmpeg/util')
 
       const ffmpeg = new FFmpeg()
 
@@ -153,16 +265,16 @@ export default function AutomationPage() {
         setProgress(Math.round(p * 100))
       })
 
-      const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd'
+      const baseURL = '/'
       await ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
+        coreURL: `${baseURL}ffmpeg-core.js`,
+        wasmURL: `${baseURL}ffmpeg-core.wasm`,
       })
 
       addLog('FFmpeg chargé avec succès')
 
       const supabase = createClient()
-      const results: { postId: string; cuts: string[] }[] = []
+      const newResults: { postId: string; cuts: string[]; cutsStoragePaths: string[] }[] = []
 
       for (let i = 0; i < posts.length; i++) {
         const post = posts[i]
@@ -226,15 +338,24 @@ export default function AutomationPage() {
             outputName
           ])
 
-          const { data } = await supabase.storage.from('clips').upload(
+          const fileData = await ffmpeg.readFile(outputName)
+          addLog(`Uploading cut ${j} to ${storagePath}...`)
+          const { data, error } = await supabase.storage.from('clips').upload(
             storagePath,
-            await ffmpeg.readFile(outputName)
+            fileData,
+            { upsert: true }
           )
+
+          if (error) {
+            addLog(`Upload error: ${error.message}`)
+            continue
+          }
 
           if (data) {
             const { data: urlData } = supabase.storage.from('clips').getPublicUrl(data.path)
             cuts.push(urlData.publicUrl)
             cutsStoragePaths.push(storagePath)
+            addLog(`Upload successful: ${urlData.publicUrl}`)
           }
 
           await ffmpeg.deleteFile(outputName)
@@ -242,72 +363,14 @@ export default function AutomationPage() {
 
         await ffmpeg.deleteFile(inputName)
 
-        await supabase.from('posts').insert({
-          user_id: user.id,
-          type: 'clip',
-          content: cuts[0] || post.content,
-          file_path: cutsStoragePaths[0] || null,
-          source_id: post.id,
-        })
-
-        results.push({ postId: post.id, cuts, cutsStoragePaths })
-        addLog(`Post ${post.id}: ${cuts.length} clips créés`)
+        newResults.push({ postId: post.id, cuts, cutsStoragePaths })
+        addLog(`Post ${post.id}: ${cuts.length} clips crees (en attente de validation)`)
       }
 
-      addLog('Création du highlight compilé...')
-      const allCutStoragePaths = results.flatMap(r => r.cutsStoragePaths as string[])
-
-      if (allCutStoragePaths.length > 0) {
-        addLog(`Téléchargement de ${allCutStoragePaths.length} clips pour assemblage...`)
-
-        for (let idx = 0; idx < allCutStoragePaths.length; idx++) {
-          const storagePath = allCutStoragePaths[idx]
-          addLog(`Téléchargement clip ${idx + 1}/${allCutStoragePaths.length}...`)
-
-          const cutFileName = `cut_${idx}.mp4`
-
-          const { data: cutData, error: cutError } = await supabase.storage.from('clips').download(storagePath)
-          if (cutError) {
-            addLog(`Erreur téléchargement clip: ${cutError}`)
-            continue
-          }
-
-          const cutBuffer = new Uint8Array(await cutData.arrayBuffer())
-          await ffmpeg.writeFile(cutFileName, cutBuffer)
-          addLog(`Clip ${idx + 1} écrit dans FFmpeg`)
-        }
-
-        addLog('Assemblage des clips...')
-        const concatList = allCutStoragePaths.map((_, idx) => `file 'cut_${idx}.mp4'`).join('\n')
-        await ffmpeg.writeFile('concat.txt', concatList)
-
-        await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'concat.txt', '-c', 'copy', 'highlight.mp4'])
-
-        const highlightData = await ffmpeg.readFile('highlight.mp4')
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
-
-        const { data } = await supabase.storage.from('clips').upload(
-          `highlights/highlight_${timestamp}.mp4`,
-          highlightData
-        )
-
-        if (data) {
-          const { data: urlData } = supabase.storage.from('clips').getPublicUrl(data.path)
-
-          await supabase.from('posts').insert({
-            user_id: user.id,
-            type: 'highlight',
-            content: urlData.publicUrl,
-            file_path: data.path,
-            is_highlight: true,
-          })
-
-          addLog(`Highlight créé: ${urlData.publicUrl}`)
-        }
-      }
-
-      addLog('Traitement terminé avec succès!')
+      setResults(newResults)
+      setShowResult(true)
       setProgress(100)
+      addLog('Traitement termine! Previsualisez les clips et cliquez sur Garder ou Supprimer.')
 
     } catch (error) {
       console.error('Processing error:', error)
@@ -498,6 +561,85 @@ export default function AutomationPage() {
             </div>
           </div>
         </div>
+
+        {/* Result */}
+        {showResult && !processing && (
+          <div className="mt-6 bg-black border-2 border-[#C2FE0C] p-6">
+            <h2 className="font-display text-lg font-bold text-[#C2FE0C] uppercase mb-4">
+              Resultat du Montage
+            </h2>
+            <div className="space-y-6">
+              {results.filter(r => r.cuts.length > 0).map((result, i) => (
+                <div key={i} className="border border-zinc-700 p-4">
+                  <p className="text-zinc-400 font-['Space_Grotesk'] text-xs mb-3">
+                    Post source: {result.postId}
+                  </p>
+                  <p className="text-[#bbf600] font-['Space_Grotesk'] font-bold mb-3">
+                    {result.cuts.length} clips en attente
+                  </p>
+                  <div className="grid grid-cols-3 gap-3">
+                    {result.cuts.map((cutUrl, j) => (
+                      <div key={j} className="relative">
+                        <video
+                          src={cutUrl}
+                          controls
+                          className="w-full bg-zinc-800 aspect-video"
+                        />
+                        <div className="absolute bottom-8 left-2 right-2 flex gap-2">
+                          <button
+                            onClick={() => handleKeepClip(cutUrl, result.cutsStoragePaths[j], result.postId)}
+                            className="flex-1 bg-green-600 hover:bg-green-500 text-white text-xs font-bold py-1"
+                          >
+                            Garder
+                          </button>
+                          <button
+                            onClick={() => handleDeleteClip(cutUrl, result.cutsStoragePaths[j])}
+                            className="flex-1 bg-red-600 hover:bg-red-500 text-white text-xs font-bold py-1"
+                          >
+                            Supprimer
+                          </button>
+                        </div>
+                        <span className="absolute bottom-2 left-2 bg-black/70 text-white text-xs px-2 py-1">
+                          Clip {j + 1}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <div className="flex flex-wrap gap-4 pt-4 border-t border-zinc-800">
+                <button
+                  onClick={handleCreateHighlight}
+                  disabled={results.every(r => r.cuts.length === 0)}
+                  className={`px-6 py-3 font-display font-bold text-sm uppercase transition-colors ${
+                    results.every(r => r.cuts.length === 0)
+                      ? 'bg-zinc-700 text-zinc-500 cursor-not-allowed'
+                      : 'bg-[#bbf600] text-black hover:bg-white'
+                  }`}
+                >
+                  Creer le Highlight
+                </button>
+                <a
+                  href="/feed"
+                  className="px-6 py-3 bg-zinc-800 text-white font-display font-bold text-sm uppercase hover:bg-zinc-700 transition-colors"
+                >
+                  Voir le Feed
+                </a>
+                <button
+                  onClick={() => {
+                    setShowResult(false)
+                    setLogs([])
+                    setResults([])
+                    router.push('/feed')
+                  }}
+                  className="px-6 py-3 bg-zinc-800 text-white font-display font-bold text-sm uppercase hover:bg-zinc-700 transition-colors"
+                >
+                  Fermer
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Logs */}
         {logs.length > 0 && (
