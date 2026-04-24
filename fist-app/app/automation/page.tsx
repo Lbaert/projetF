@@ -211,10 +211,12 @@ export default function AutomationPage() {
 
         addLog(`Découpage de ${timestamps.length} segments...`)
         const cuts: string[] = []
+        const cutsStoragePaths: string[] = []
 
         for (let j = 0; j < timestamps.length; j++) {
           const { start, end } = timestamps[j]
           const outputName = `cut_${i}_${j}.mp4`
+          const storagePath = `cuts/${post.id}_cut_${j}.mp4`
 
           await ffmpeg.exec([
             '-i', inputName,
@@ -225,13 +227,14 @@ export default function AutomationPage() {
           ])
 
           const { data } = await supabase.storage.from('clips').upload(
-            `cuts/${post.id}_cut_${j}.mp4`,
+            storagePath,
             await ffmpeg.readFile(outputName)
           )
 
           if (data) {
             const { data: urlData } = supabase.storage.from('clips').getPublicUrl(data.path)
             cuts.push(urlData.publicUrl)
+            cutsStoragePaths.push(storagePath)
           }
 
           await ffmpeg.deleteFile(outputName)
@@ -243,19 +246,39 @@ export default function AutomationPage() {
           user_id: user.id,
           type: 'clip',
           content: cuts[0] || post.content,
-          file_path: cuts[0] ? `cuts/${post.id}_cut_0.mp4` : null,
+          file_path: cutsStoragePaths[0] || null,
           source_id: post.id,
         })
 
-        results.push({ postId: post.id, cuts })
+        results.push({ postId: post.id, cuts, cutsStoragePaths })
         addLog(`Post ${post.id}: ${cuts.length} clips créés`)
       }
 
       addLog('Création du highlight compilé...')
-      const allCuts = results.flatMap(r => r.cuts)
+      const allCutStoragePaths = results.flatMap(r => r.cutsStoragePaths as string[])
 
-      if (allCuts.length > 0) {
-        const concatList = allCuts.map((_, idx) => `file 'cut_${idx}.mp4'`).join('\n')
+      if (allCutStoragePaths.length > 0) {
+        addLog(`Téléchargement de ${allCutStoragePaths.length} clips pour assemblage...`)
+
+        for (let idx = 0; idx < allCutStoragePaths.length; idx++) {
+          const storagePath = allCutStoragePaths[idx]
+          addLog(`Téléchargement clip ${idx + 1}/${allCutStoragePaths.length}...`)
+
+          const cutFileName = `cut_${idx}.mp4`
+
+          const { data: cutData, error: cutError } = await supabase.storage.from('clips').download(storagePath)
+          if (cutError) {
+            addLog(`Erreur téléchargement clip: ${cutError}`)
+            continue
+          }
+
+          const cutBuffer = new Uint8Array(await cutData.arrayBuffer())
+          await ffmpeg.writeFile(cutFileName, cutBuffer)
+          addLog(`Clip ${idx + 1} écrit dans FFmpeg`)
+        }
+
+        addLog('Assemblage des clips...')
+        const concatList = allCutStoragePaths.map((_, idx) => `file 'cut_${idx}.mp4'`).join('\n')
         await ffmpeg.writeFile('concat.txt', concatList)
 
         await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'concat.txt', '-c', 'copy', 'highlight.mp4'])
