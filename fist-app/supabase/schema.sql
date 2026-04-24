@@ -91,25 +91,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS orphan_children_on_delete ON posts;
 CREATE TRIGGER orphan_children_on_delete
   BEFORE DELETE ON posts
   FOR EACH ROW EXECUTE FUNCTION orphan_children_on_parent_delete();
 
 -- Delete storage file when a post is deleted
-CREATE OR REPLACE FUNCTION delete_post_storage()
-RETURNS TRIGGER AS $$
-BEGIN
-  IF OLD.file_path IS NOT NULL AND OLD.file_path != '' THEN
-    DELETE FROM supabase.storage.objects WHERE bucket_id = 'clips' AND name = OLD.file_path;
-  END IF;
-  RETURN OLD;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER on_post_delete_delete_storage
-  AFTER DELETE ON posts
-  FOR EACH ROW EXECUTE FUNCTION delete_post_storage();
-
 -- ============================================
 -- ONE-TIME CLEANUP: Run this once to clean existing orphaned data
 -- Remove posts whose source_id points to a deleted post
