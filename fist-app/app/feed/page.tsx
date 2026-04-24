@@ -424,7 +424,7 @@ export default function FeedPage() {
 
             {/* Filters */}
             <div className="flex gap-0">
-              {(['all', 'clip', 'music', 'reference', 'highlight'] as (ContentType | 'all')[]).map((f) => (
+              {(['clip', 'music', 'reference', 'all', 'highlight'] as (ContentType | 'all')[]).map((f) => (
                 <button
                   key={f}
                   onClick={() => setFilter(f)}
