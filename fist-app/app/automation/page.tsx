@@ -22,6 +22,61 @@ interface ProcessingParams {
   postBuffer: number
 }
 
+function findPeaksInWav(buffer: ArrayBuffer, dbThreshold: number, preBuffer: number, postBuffer: number): { start: number; end: number }[] {
+  const view = new DataView(buffer)
+  const timestamps: { start: number; end: number }[] = []
+
+  let offset = 12
+  if (view.getUint32(0, true) !== 0x46464952) return timestamps
+
+  const channels = view.getUint16(22, true)
+  const sampleRate = view.getUint32(24, true)
+  const bitsPerSample = view.getUint16(34, true)
+
+  offset = 36
+  while (offset < view.byteLength - 8) {
+    const chunkId = view.getUint32(offset, true)
+    const chunkSize = view.getUint32(offset + 4, true)
+    if (chunkId === 0x61746164) break
+    offset += 8 + chunkSize
+  }
+
+  if (offset >= view.byteLength) return timestamps
+
+  const dataOffset = offset + 8
+  const dataSize = Math.min(view.byteLength - dataOffset, 10 * 1024 * 1024)
+  const samplesPerChannel = Math.floor(dataSize / (bitsPerSample / 8) / channels)
+
+  const minPeakDistance = Math.floor(sampleRate * 0.5)
+  let lastPeakIndex = -minPeakDistance
+
+  for (let i = 0; i < samplesPerChannel; i++) {
+    let maxSample = 0
+    for (let c = 0; c < channels; c++) {
+      const sampleOffset = dataOffset + i * (bitsPerSample / 8) * channels + c * (bitsPerSample / 8)
+      let sample = 0
+      if (bitsPerSample === 16) {
+        sample = Math.abs(view.getInt16(sampleOffset, true)) / 32768
+      } else if (bitsPerSample === 32) {
+        sample = Math.abs(view.getFloat32(sampleOffset, true))
+      }
+      maxSample = Math.max(maxSample, sample)
+    }
+
+    const dbValue = 20 * Math.log10(maxSample + 0.0001)
+    if (dbValue > dbThreshold && i - lastPeakIndex >= minPeakDistance / channels) {
+      const peakTimeMs = (i / sampleRate) * 1000
+      timestamps.push({
+        start: Math.max(0, peakTimeMs - preBuffer),
+        end: peakTimeMs + postBuffer
+      })
+      lastPeakIndex = i
+    }
+  }
+
+  return timestamps
+}
+
 export default function AutomationPage() {
   const { user, loading: authLoading, isAdmin } = useAuth()
   const router = useRouter()
@@ -86,7 +141,7 @@ export default function AutomationPage() {
       addLog('Initialisation de FFmpeg...')
 
       const { FFmpeg } = await import('@ffmpeg/ffmpeg')
-      const { fetchFile, toBlobURL } = await import('@ffmpeg/util')
+      const { toBlobURL } = await import('@ffmpeg/util')
 
       const ffmpeg = new FFmpeg()
 
@@ -132,17 +187,27 @@ export default function AutomationPage() {
         const inputName = `input_${i}.mp4`
         await ffmpeg.writeFile(inputName, videoData)
 
-        addLog(`Extraction de l'audio...`)
-        await ffmpeg.exec(['-i', inputName, '-vn', '-sn', '-af', `volumedetect`, `-f`, `null`, `pipe:`])
-
-        addLog(`Détection des pics audio (seuil: ${params.dbThreshold}dB)...`)
+        addLog(`Analyse audio pour détection des pics...`)
+        const audioWavName = `audio_${i}.wav`
         await ffmpeg.exec([
           '-i', inputName,
-          '-af', `loudnorm=I=${params.dbThreshold}:print_format=json`,
-          '-f', 'null', 'pipe:'
+          '-vn',
+          '-acodec', 'pcm_s16le',
+          '-ar', '44100',
+          '-ac', '2',
+          audioWavName
         ])
 
-        const timestamps = generateTimestamps(30000, params.dbThreshold, params.preBuffer, params.postBuffer)
+        const audioData = await ffmpeg.readFile(audioWavName)
+        const timestamps = findPeaksInWav((audioData as Uint8Array).buffer, params.dbThreshold, params.preBuffer, params.postBuffer)
+
+        await ffmpeg.deleteFile(audioWavName)
+
+        if (timestamps.length === 0) {
+          addLog(`Aucun pic audio détecté, passage à la vidéo suivante`)
+          await ffmpeg.deleteFile(inputName)
+          continue
+        }
 
         addLog(`Découpage de ${timestamps.length} segments...`)
         const cuts: string[] = []
@@ -227,25 +292,6 @@ export default function AutomationPage() {
     } finally {
       setProcessing(false)
     }
-  }
-
-  function generateTimestamps(durationMs: number, dbThreshold: number, preBuffer: number, postBuffer: number) {
-    const timestamps: { start: number; end: number }[] = []
-    const interval = 100
-    let i = 0
-
-    while (i < durationMs) {
-      const random = Math.random()
-      if (random > 0.95) {
-        const peak = i
-        const start = Math.max(0, peak - preBuffer)
-        const end = Math.min(durationMs, peak + postBuffer)
-        timestamps.push({ start, end })
-      }
-      i += interval
-    }
-
-    return timestamps
   }
 
   if (authLoading || loading || !user) {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { VoteButtons } from './VoteButtons'
 import type { Post, User } from '@/lib/types'
 
@@ -14,13 +14,25 @@ interface PostCardProps {
 }
 
 function isVideoUrl(url: string): boolean {
-  return /\.(mp4|webm|ogg|mov)$/i.test(url) || url.includes('youtube.com') || url.includes('youtu.be') || url.includes('twitch.tv')
+  return /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url) || url.includes('youtube.com') || url.includes('youtu.be') || url.includes('twitch.tv') || (url.includes('/storage/') && /\.(mp4|webm|ogg|mov)/i.test(url))
 }
 
 function VideoThumbnail({ url }: { url: string }) {
   const [isHovered, setIsHovered] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
-  if (/\.(mp4|webm|ogg|mov)$/i.test(url)) {
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    if (isHovered) {
+      video.play().catch(() => {})
+    } else {
+      video.pause()
+    }
+  }, [isHovered])
+
+  if (/\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url) || (url.includes('/storage/') && /\.(mp4|webm|ogg|mov)/i.test(url))) {
     return (
       <div
         className="relative w-full aspect-video bg-black mb-4 overflow-hidden"
@@ -28,11 +40,11 @@ function VideoThumbnail({ url }: { url: string }) {
         onMouseLeave={() => setIsHovered(false)}
       >
         <video
+          ref={videoRef}
           src={url}
           className="w-full h-full object-cover"
-          autoPlay={isHovered}
-          muted={isHovered}
-          loop={isHovered}
+          muted={true}
+          loop={true}
           playsInline
         />
       </div>

@@ -82,7 +82,7 @@ export default function FeedPage() {
         const sanitizedName = selectedFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')
         const fileName = `${timestamp}_${sanitizedName}`
 
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from('clips')
           .upload(fileName, selectedFile, {
             cacheControl: '3600',
