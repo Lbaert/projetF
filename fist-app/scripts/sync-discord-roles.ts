@@ -47,6 +47,7 @@ async function syncRoles() {
   if (response && response.length > 0) {
     console.log('First member keys:', Object.keys(response[0]))
     console.log('First member user:', response[0].user?.username, response[0].user?.id)
+    console.log('All member usernames:', response.map((m: any) => m.user?.username))
   }
 
   const updates = (response || [])
