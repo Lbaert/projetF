@@ -44,6 +44,7 @@ ALTER TABLE votes ENABLE ROW LEVEL SECURITY;
 -- RLS Policies
 CREATE POLICY "Users can view all" ON users FOR SELECT USING (true);
 CREATE POLICY "Users can update own" ON users FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Service can insert users" ON users FOR INSERT WITH CHECK (true);
 
 CREATE POLICY "Anyone can view posts" ON posts FOR SELECT USING (true);
 CREATE POLICY "Authenticated can create posts" ON posts FOR INSERT WITH CHECK (auth.role() = 'authenticated');
