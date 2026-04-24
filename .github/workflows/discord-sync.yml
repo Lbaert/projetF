@@ -1,0 +1,32 @@
+name: Discord Role Sync
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Discord role sync
+        run: npm run sync-roles
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_SERVER_ID: ${{ secrets.DISCORD_SERVER_ID }}
+          DISCORD_ROLE_LYCANTHROPE: ${{ secrets.DISCORD_ROLE_LYCANTHROPE }}
+          DISCORD_ROLE_PRIMATE: ${{ secrets.DISCORD_ROLE_PRIMATE }}
+          DISCORD_ROLE_SINGE: ${{ secrets.DISCORD_ROLE_SINGE }}
+          DISCORD_ROLE_FIST: ${{ secrets.DISCORD_ROLE_FIST }}
