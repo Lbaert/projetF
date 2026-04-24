@@ -81,6 +81,7 @@ export function PostCard({ post, canVote, canDelete, onDelete, selectionMode = f
     music: 'bg-cyan-400 text-black',
     reference: 'bg-purple-400 text-black',
     soundboard: 'bg-orange-400 text-black',
+    highlight: 'bg-[#bbf600] text-black',
   }
 
   const typeLabels: Record<string, string> = {
@@ -88,6 +89,7 @@ export function PostCard({ post, canVote, canDelete, onDelete, selectionMode = f
     music: 'Musique',
     reference: 'Référence',
     soundboard: 'Soundboard',
+    highlight: 'Highlight',
   }
 
   const total = upvotes + downvotes
