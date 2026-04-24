@@ -348,7 +348,7 @@ export default function FeedPage() {
                           {selectedFile.name.slice(0, 12)}...
                         </span>
                       ) : (
-                        <img src="/drop.webp" alt="Drop" className="w-8 h-8 object-contain" />
+                        <img src="/drop.webp" alt="Drop" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
                       )}
                     </label>
                     {selectedFile && (
