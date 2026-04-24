@@ -2,23 +2,24 @@ import { Client, GatewayIntentBits } from 'discord.js'
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'fs'
 
-const envContent = readFileSync('./.env.local', 'utf-8')
-const envVars: Record<string, string> = {}
-for (const line of envContent.split('\n')) {
-  const [key, ...valueParts] = line.split('=')
-  if (key && valueParts.length > 0) {
-    envVars[key.trim()] = valueParts.join('=').trim()
+function getEnv(key: string): string {
+  if (process.env[key]) return process.env[key]!
+  const envContent = readFileSync('./.env.local', 'utf-8')
+  for (const line of envContent.split('\n')) {
+    const [k, ...valueParts] = line.split('=')
+    if (k?.trim() === key) return valueParts.join('=').trim()
   }
+  throw new Error(`Missing env var: ${key}`)
 }
 
-const SUPABASE_URL = envVars['NEXT_PUBLIC_SUPABASE_URL']
-const SUPABASE_SERVICE_ROLE_KEY = envVars['SUPABASE_SERVICE_ROLE_KEY']
-const BOT_TOKEN = envVars['DISCORD_BOT_TOKEN']
-const GUILD_ID = envVars['DISCORD_SERVER_ID']
-const ROLE_LYCANTHROPE = envVars['DISCORD_ROLE_LYCANTHROPE']
-const ROLE_PRIMATE = envVars['DISCORD_ROLE_PRIMATE']
-const ROLE_SINGE = envVars['DISCORD_ROLE_SINGE']
-const ROLE_FIST = envVars['DISCORD_ROLE_FIST']
+const SUPABASE_URL = getEnv('NEXT_PUBLIC_SUPABASE_URL')
+const SUPABASE_SERVICE_ROLE_KEY = getEnv('SUPABASE_SERVICE_ROLE_KEY')
+const BOT_TOKEN = getEnv('DISCORD_BOT_TOKEN')
+const GUILD_ID = getEnv('DISCORD_SERVER_ID')
+const ROLE_LYCANTHROPE = getEnv('DISCORD_ROLE_LYCANTHROPE')
+const ROLE_PRIMATE = getEnv('DISCORD_ROLE_PRIMATE')
+const ROLE_SINGE = getEnv('DISCORD_ROLE_SINGE')
+const ROLE_FIST = getEnv('DISCORD_ROLE_FIST')
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
