@@ -442,11 +442,11 @@ export default function FeedPage() {
                       : 'hover:bg-zinc-800'
                   }`}
                 >
-                  {f === 'clip' && <img src="/video.webp" alt="Clip" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }} />}
-                  {f === 'music' && <img src="/audio.webp" alt="Audio" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }} />}
-                  {f === 'reference' && <img src="/texte.webp" alt="Texte" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }} />}
-                  {f === 'highlight' && <img src="/highlight.webp" alt="Highlight" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }} />}
-                  {f === 'all' && <img src="/all.webp" alt="All" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }} />}
+                  {f === 'clip' && <img src="/video.webp" alt="Clip" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(56%) sepia(87%) saturate(1412%) hue-rotate(357deg) brightness(101%) contrast(104%)' }} />}
+                  {f === 'music' && <img src="/audio.webp" alt="Audio" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(56%) sepia(87%) saturate(1412%) hue-rotate(357deg) brightness(101%) contrast(104%)' }} />}
+                  {f === 'reference' && <img src="/texte.webp" alt="Texte" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(56%) sepia(87%) saturate(1412%) hue-rotate(357deg) brightness(101%) contrast(104%)' }} />}
+                  {f === 'highlight' && <img src="/highlight.webp" alt="Highlight" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(56%) sepia(87%) saturate(1412%) hue-rotate(357deg) brightness(101%) contrast(104%)' }} />}
+                  {f === 'all' && <img src="/all.webp" alt="All" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(56%) sepia(87%) saturate(1412%) hue-rotate(357deg) brightness(101%) contrast(104%)' }} />}
                 </button>
               ))}
             </div>
