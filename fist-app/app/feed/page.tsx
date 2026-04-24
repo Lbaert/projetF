@@ -469,7 +469,7 @@ export default function FeedPage() {
                 <img
                   src={user.avatar}
                   alt="Avatar"
-                  className="w-10 h-10 rounded-full border-2 border-black transition-all group-hover:border-[#C2FE0C]"
+                  className="w-10 h-10 rounded-full border-2 border-black transition-all group-hover:border-[#f600bb]"
                 />
               )}
               <button
@@ -481,7 +481,7 @@ export default function FeedPage() {
                 }}
                 className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <span className="text-[#C2FE0C] text-2xl font-bold">×</span>
+                <span className="text-[#f600bb] text-2xl font-bold">×</span>
               </button>
             </div>
           </div>
