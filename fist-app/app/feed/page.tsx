@@ -221,7 +221,7 @@ export default function FeedPage() {
                           src="/video.webp"
                           alt="Clip"
                           className="w-10 h-10 object-contain border-2 border-transparent"
-                          style={{ filter: type === t ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }}
+                          style={{ filter: type === t ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }}
                         />
                       )}
                       {t === 'music' && (
@@ -229,7 +229,7 @@ export default function FeedPage() {
                           src="/audio.webp"
                           alt="Audio"
                           className="w-10 h-10 object-contain border-2 border-transparent"
-                          style={{ filter: type === t ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }}
+                          style={{ filter: type === t ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }}
                         />
                       )}
                       {t === 'reference' && (
@@ -237,7 +237,7 @@ export default function FeedPage() {
                           src="/texte.webp"
                           alt="Texte"
                           className="w-10 h-10 object-contain border-2 border-transparent"
-                          style={{ filter: type === t ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }}
+                          style={{ filter: type === t ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }}
                         />
                       )}
                     </button>
