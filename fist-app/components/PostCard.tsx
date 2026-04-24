@@ -7,6 +7,9 @@ interface PostCardProps {
   canVote: boolean
   canDelete: boolean
   onDelete: (postId: string) => void
+  selectionMode?: boolean
+  isSelected?: boolean
+  onSelect?: (postId: string) => void
 }
 
 function isVideoUrl(url: string): boolean {
@@ -56,7 +59,7 @@ function VideoThumbnail({ url }: { url: string }) {
   return null
 }
 
-export function PostCard({ post, canVote, canDelete, onDelete }: PostCardProps) {
+export function PostCard({ post, canVote, canDelete, onDelete, selectionMode = false, isSelected = false, onSelect }: PostCardProps) {
   const upvotes = (post as any).upvotes ?? 0
   const downvotes = (post as any).downvotes ?? 0
 
@@ -78,9 +81,25 @@ export function PostCard({ post, canVote, canDelete, onDelete }: PostCardProps) 
   const percentage = total > 0 ? Math.round((upvotes / total) * 100) : 0
 
   return (
-    <div className="bg-black border border-zinc-800 group hover:border-[#bbf600]/50 transition-all duration-75 relative overflow-hidden">
+    <div className={`bg-black border group hover:border-[#bbf600]/50 transition-all duration-75 relative overflow-hidden ${
+      selectionMode ? (isSelected ? 'border-[#bbf600]' : 'border-zinc-800') : 'border-zinc-800'
+    }`}>
       <div className="p-4">
         <div className="flex items-center gap-2 mb-4">
+          {selectionMode && (
+            <button
+              onClick={() => onSelect?.(post.id)}
+              className={`w-8 h-8 shrink-0 flex items-center justify-center border-2 transition-all ${
+                isSelected
+                  ? 'bg-[#bbf600] border-[#bbf600]'
+                  : 'border-zinc-700 hover:border-[#bbf600]'
+              }`}
+            >
+              {isSelected && (
+                <img src="/check.webp" alt="Selected" className="w-5 h-5 object-contain" />
+              )}
+            </button>
+          )}
           <div className="w-8 h-8 bg-zinc-800 border border-zinc-700 overflow-hidden flex items-center justify-center shrink-0">
             {post.user?.avatar ? (
               <img

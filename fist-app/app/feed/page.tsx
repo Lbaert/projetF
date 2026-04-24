@@ -22,12 +22,37 @@ export default function FeedPage() {
   const [content, setContent] = useState('')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [selectionMode, setSelectionMode] = useState(false)
+  const [selectedPosts, setSelectedPosts] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     if (!authLoading && !user && !authError) {
       router.push('/')
     }
   }, [authLoading, user, authError, router])
+
+  const handleSelectPost = (postId: string) => {
+    const newSelected = new Set(selectedPosts)
+    if (newSelected.has(postId)) {
+      newSelected.delete(postId)
+    } else {
+      newSelected.add(postId)
+    }
+    setSelectedPosts(newSelected)
+  }
+
+  const handleProcessSelected = () => {
+    if (selectedPosts.size === 0) return
+    const ids = Array.from(selectedPosts).join(',')
+    router.push(`/automation?ids=${ids}`)
+  }
+
+  const toggleSelectionMode = () => {
+    if (selectionMode) {
+      setSelectedPosts(new Set())
+    }
+    setSelectionMode(!selectionMode)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -311,6 +336,18 @@ export default function FeedPage() {
               <img src="/dark.webp" alt="Dark" className="w-10 h-10 object-contain" style={{ filter: inverted ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
             </button>
 
+            {/* Selection Mode Button */}
+            {isAdmin && (
+              <button
+                onClick={toggleSelectionMode}
+                className={`w-14 h-14 shrink-0 flex items-center justify-center transition-all ${
+                  selectionMode ? 'bg-[#bbf600]' : 'hover:bg-zinc-800'
+                }`}
+              >
+                <img src="/select.webp" alt="Select" className="w-10 h-10 object-contain" style={{ filter: selectionMode ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+              </button>
+            )}
+
             {/* Filters */}
             <div className="flex gap-0">
               {(['all', 'clip', 'music', 'reference'] as (ContentType | 'all')[]).map((f) => (
@@ -369,7 +406,7 @@ export default function FeedPage() {
       </header>
 
       {/* Posts Grid */}
-      <div className="p-6">
+      <div className="p-6 pb-24">
         {postsLoading ? (
           <p className="text-center py-8 text-neutral-500 font-display text-xs uppercase">
             Chargement...
@@ -387,11 +424,35 @@ export default function FeedPage() {
                 canVote={canUpload}
                 canDelete={isAdmin || post.user?.discord_id === user.discord_id}
                 onDelete={handleDelete}
+                selectionMode={selectionMode}
+                isSelected={selectedPosts.has(post.id)}
+                onSelect={handleSelectPost}
               />
             ))}
           </div>
         )}
       </div>
+
+      {/* Floating Action Bar for Selection */}
+      {selectionMode && selectedPosts.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-black border-2 border-[#bbf600] px-6 py-4 flex items-center gap-6">
+          <span className="text-[#bbf600] font-['Space_Grotesk'] font-bold text-sm uppercase">
+            {selectedPosts.size} selected
+          </span>
+          <button
+            onClick={handleProcessSelected}
+            className="px-6 py-3 bg-[#bbf600] text-black font-['Space_Grotesk'] font-black text-xs uppercase hover:bg-white transition-colors"
+          >
+            Lancer le montage
+          </button>
+          <button
+            onClick={toggleSelectionMode}
+            className="px-6 py-3 bg-zinc-800 text-white font-['Space_Grotesk'] font-bold text-xs uppercase hover:bg-zinc-700 transition-colors"
+          >
+            Annuler
+          </button>
+        </div>
+      )}
     </div>
   )
 }
