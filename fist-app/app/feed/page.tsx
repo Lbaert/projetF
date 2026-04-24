@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { usePosts } from '@/hooks/usePosts'
+import { useClipStats } from '@/hooks/useClipStats'
 import { PostCard } from '@/components/PostCard'
 import { AuthButton } from '@/components/AuthButton'
 import { createClient } from '@/lib/supabase/client'
@@ -14,6 +15,8 @@ export default function FeedPage() {
   const router = useRouter()
   const [filter, setFilter] = useState<ContentType | 'all'>('all')
   const { posts, loading: postsLoading, refetch } = usePosts(filter)
+  const { stats } = useClipStats()
+  const [inverted, setInverted] = useState(false)
 
   const [type, setType] = useState<ContentType>('clip')
   const [content, setContent] = useState('')
@@ -101,62 +104,17 @@ export default function FeedPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex">
-      {/* Sidebar - Vertical */}
-      <aside className="w-14 bg-black border-r-2 border-[#C2FE0C]/30 sticky top-0 h-screen shrink-0 flex flex-col items-center gap-4">
-        {/* Avatar with logout on hover */}
-        <div className="relative group shrink-0 cursor-pointer w-[57px] h-[56px] bg-black flex items-end justify-end pr-1 pb-1">
-          {user.avatar && (
-            <img
-              src={user.avatar}
-              alt="Avatar"
-              className="w-10 h-10 rounded-full border-2 border-black transition-all group-hover:border-[#C2FE0C]"
-            />
-          )}
-          <button
-            onClick={async () => {
-              const { createClient } = await import('@/lib/supabase/client')
-              const supabase = createClient()
-              await supabase.auth.signOut()
-              router.push('/')
-            }}
-            className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <span className="text-[#C2FE0C] text-2xl font-bold">×</span>
-          </button>
-        </div>
+    <div className="min-h-screen bg-[#0a0a0a]" style={inverted ? { filter: 'invert(1) hue-rotate(180deg)' } : {}}>
+      {/* Top Bar */}
+      <header className="bg-black border-b-2 border-[#C2FE0C]/30 sticky top-0 z-40">
+        <div className="flex items-center justify-between">
+          {/* Left: Empty space */}
+          <div className="w-20"></div>
 
-        {/* Filters */}
-        <div className="flex flex-col gap-2">
-          {(['all', 'clip', 'music', 'reference'] as (ContentType | 'all')[]).map((f) => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`w-14 h-14 flex items-center justify-center transition-all ${
-                filter === f
-                  ? 'bg-[#bbf600]'
-                  : 'hover:bg-zinc-800'
-              }`}
-            >
-              {f === 'clip' && <img src="/video.webp" alt="Clip" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
-              {f === 'music' && <img src="/audio.webp" alt="Audio" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
-              {f === 'reference' && <img src="/texte.webp" alt="Texte" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
-              {f === 'all' && <img src="/all.webp" alt="All" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
-            </button>
-          ))}
-        </div>
-
-        {/* Spacer */}
-        <div className="flex-1"></div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col min-h-screen">
-        {/* Top Bar with Form */}
-        <div className="bg-black border-b-2 border-[#C2FE0C]/30 sticky top-0 z-40">
+          {/* Center: Form */}
           {canUpload && (
-            <form onSubmit={handleSubmit} className="flex items-center max-w-5xl mx-auto">
-              <div className="flex items-center flex-1">
+            <form onSubmit={handleSubmit} className="flex items-center flex-1 max-w-3xl mx-auto">
+              <div className="flex items-center">
                 <div className="flex gap-0">
                   {(['clip', 'music', 'reference'] as ContentType[]).map((t) => (
                     <button
@@ -206,7 +164,7 @@ export default function FeedPage() {
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="HTTPS://SOURCE_FEED.01"
                     required
-                    className="h-14 flex-1 bg-transparent border-y-2 border-zinc-800 focus:border-[#bbf600] text-white font-['Space_Grotesk'] text-sm px-4 outline-none transition-colors placeholder:text-zinc-800"
+                    className="h-14 flex-1 bg-transparent border-2 border-l-transparent border-t-zinc-800 border-b-zinc-800 border-r-zinc-800 focus:border-l-[#bbf600] focus:border-t-[#bbf600] focus:border-b-[#bbf600] hover:border-l-[#bbf600] hover:border-t-[#bbf600] hover:border-b-[#bbf600] text-white font-['Space_Grotesk'] text-sm px-4 outline-none transition-colors placeholder:text-zinc-800"
                   />
                 )}
                 {type === 'reference' && (
@@ -216,7 +174,7 @@ export default function FeedPage() {
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="DESCRIBE THE ASSET..."
                     required
-                    className="h-14 flex-1 bg-transparent border-y-2 border-zinc-800 focus:border-[#bbf600] text-white font-['Space_Grotesk'] text-sm px-4 outline-none transition-colors placeholder:text-zinc-800"
+                    className="h-14 flex-1 bg-transparent border-2 border-l-transparent border-t-zinc-800 border-b-zinc-800 border-r-zinc-800 focus:border-l-[#bbf600] focus:border-t-[#bbf600] focus:border-b-[#bbf600] hover:border-l-[#bbf600] hover:border-t-[#bbf600] hover:border-b-[#bbf600] text-white font-['Space_Grotesk'] text-sm px-4 outline-none transition-colors placeholder:text-zinc-800"
                   />
                 )}
 
@@ -228,36 +186,130 @@ export default function FeedPage() {
                   <span>INITIATE</span>
                   <span className="material-symbols-outlined text-lg">bolt</span>
                 </button>
+                <span className="ml-4 text-lg text-[#C2FE0C] font-['Space_Grotesk'] font-bold shrink-0">
+                  FIST: {Math.round(stats.progress)}%
+                </span>
               </div>
             </form>
           )}
-        </div>
 
-        {/* Posts Grid */}
-        <div className="p-6 flex-1">
-          {postsLoading ? (
-            <p className="text-center py-8 text-neutral-500 font-display text-xs uppercase">
-              Chargement...
-            </p>
-          ) : posts.length === 0 ? (
-            <p className="text-center py-8 text-neutral-500 font-display text-xs uppercase">
-              Aucun contenu pour le moment
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
-              {posts.map((post) => (
-                <PostCard
-                  key={post.id}
-                  post={post}
-                  canVote={canUpload}
-                  canDelete={isAdmin || post.user?.discord_id === user.discord_id}
-                  onDelete={handleDelete}
-                />
+          {/* Right: Filters + Dashboard + User */}
+          <div className="flex items-center gap-4 shrink-0">
+            {/* Dashboard Link */}
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="w-14 h-14 flex items-center justify-center hover:bg-zinc-800 transition-all"
+            >
+              <img src="/dash.webp" alt="Dashboard" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+            </button>
+
+            {/* About Link */}
+            <button
+              onClick={() => router.push('/about')}
+              className="w-14 h-14 flex items-center justify-center hover:bg-zinc-800 transition-all"
+            >
+              <img src="/about.webp" alt="About" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+            </button>
+
+            {/* Account Link */}
+            <button
+              onClick={() => router.push('/account')}
+              className="w-14 h-14 flex items-center justify-center hover:bg-zinc-800 transition-all"
+            >
+              <img src="/membre.webp" alt="Account" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+            </button>
+
+            {/* Invert Colors Button */}
+            <button
+              onClick={() => setInverted(!inverted)}
+              className={`w-14 h-14 shrink-0 flex items-center justify-center transition-all ${
+                inverted ? 'bg-white' : 'hover:bg-zinc-800'
+              }`}
+            >
+              <img src="/dark.webp" alt="Dark" className="w-10 h-10 object-contain" style={{ filter: inverted ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+            </button>
+
+            {/* Filters */}
+            <div className="flex gap-0">
+              {(['all', 'clip', 'music', 'reference'] as (ContentType | 'all')[]).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={`w-14 h-14 shrink-0 flex items-center justify-center transition-all ${
+                    filter === f
+                      ? 'bg-[#bbf600]'
+                      : 'hover:bg-zinc-800'
+                  }`}
+                >
+                  {f === 'clip' && <img src="/video.webp" alt="Clip" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
+                  {f === 'music' && <img src="/audio.webp" alt="Audio" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
+                  {f === 'reference' && <img src="/texte.webp" alt="Texte" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
+                  {f === 'all' && <img src="/all.webp" alt="All" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
+                </button>
               ))}
             </div>
-          )}
+
+            {/* Sound Button */}
+            <button
+              onClick={() => {
+                const audio = new Audio('/mhh.ogg')
+                audio.volume = 0.5
+                audio.play()
+              }}
+              className="w-14 h-14 shrink-0 flex items-center justify-center hover:bg-zinc-800 transition-all"
+            >
+              <img src="/logo2.webp" alt="Sound" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+            </button>
+
+            {/* Avatar with logout on hover */}
+            <div className="relative group shrink-0 cursor-pointer w-[57px] h-[56px] bg-black flex items-center justify-center">
+              {user.avatar && (
+                <img
+                  src={user.avatar}
+                  alt="Avatar"
+                  className="w-10 h-10 rounded-full border-2 border-black transition-all group-hover:border-[#C2FE0C]"
+                />
+              )}
+              <button
+                onClick={async () => {
+                  const { createClient } = await import('@/lib/supabase/client')
+                  const supabase = createClient()
+                  await supabase.auth.signOut()
+                  router.push('/')
+                }}
+                className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <span className="text-[#C2FE0C] text-2xl font-bold">×</span>
+              </button>
+            </div>
+          </div>
         </div>
-      </main>
+      </header>
+
+      {/* Posts Grid */}
+      <div className="p-6">
+        {postsLoading ? (
+          <p className="text-center py-8 text-neutral-500 font-display text-xs uppercase">
+            Chargement...
+          </p>
+        ) : posts.length === 0 ? (
+          <p className="text-center py-8 text-neutral-500 font-display text-xs uppercase">
+            Aucun contenu pour le moment
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
+            {posts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                canVote={canUpload}
+                canDelete={isAdmin || post.user?.discord_id === user.discord_id}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
