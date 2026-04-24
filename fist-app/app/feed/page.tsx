@@ -14,7 +14,7 @@ export default function FeedPage() {
   const { user, loading: authLoading, error: authError, canUpload, isAdmin } = useAuth()
   const router = useRouter()
   const [filter, setFilter] = useState<ContentType | 'all'>('all')
-  const { posts, loading: postsLoading, refetch } = usePosts(filter)
+  const { posts, loading: postsLoading, loadingMore, hasMore, loadMore, refetch } = usePosts(filter)
   const { stats } = useClipStats()
   const [inverted, setInverted] = useState(false)
 
@@ -30,6 +30,21 @@ export default function FeedPage() {
       router.push('/')
     }
   }, [authLoading, user, authError, router])
+
+  useEffect(() => {
+    const sentinel = document.getElementById('feed-sentinel')
+    if (!sentinel) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore()
+        }
+      },
+      { threshold: 0.1 }
+    )
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [loadMore])
 
   const handleSelectPost = (postId: string) => {
     const newSelected = new Set(selectedPosts)
@@ -486,21 +501,35 @@ export default function FeedPage() {
             Aucun contenu pour le moment
           </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
-            {posts.map((post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                canVote={canUpload}
-                canDelete={isAdmin || post.user?.discord_id === user.discord_id}
-                onDelete={handleDelete}
-                selectionMode={selectionMode}
-                isSelected={selectedPosts.has(post.id)}
-                onSelect={handleSelectPost}
-                selectionDisabled={(post.type === 'clip' || post.type === 'music') && !post.file_path}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
+              {posts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  canVote={canUpload}
+                  canDelete={isAdmin || post.user?.discord_id === user.discord_id}
+                  onDelete={handleDelete}
+                  selectionMode={selectionMode}
+                  isSelected={selectedPosts.has(post.id)}
+                  onSelect={handleSelectPost}
+                  selectionDisabled={(post.type === 'clip' || post.type === 'music') && !post.file_path}
+                />
+              ))}
+            </div>
+            <div id="feed-sentinel" className="w-full py-8 text-center">
+              {loadingMore && (
+                <p className="text-zinc-500 font-display text-xs uppercase animate-pulse">
+                  Chargement...
+                </p>
+              )}
+              {!hasMore && posts.length > 0 && (
+                <p className="text-zinc-600 font-display text-xs uppercase">
+                  Fin du feed
+                </p>
+              )}
+            </div>
+          </>
         )}
       </div>
 
