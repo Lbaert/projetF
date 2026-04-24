@@ -15,12 +15,15 @@ CREATE TABLE users (
 CREATE TABLE posts (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-  type VARCHAR(50) NOT NULL CHECK (type IN ('clip', 'music', 'reference', 'soundboard')),
+  type VARCHAR(50) NOT NULL CHECK (type IN ('clip', 'music', 'reference', 'soundboard', 'highlight')),
   content TEXT NOT NULL,
   file_path VARCHAR(500),
   score INTEGER DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  source_id UUID REFERENCES posts(id) ON DELETE SET NULL,
+  is_highlight BOOLEAN DEFAULT false,
+  cut_timestamps JSONB DEFAULT '[]'::jsonb
 );
 
 -- Votes table

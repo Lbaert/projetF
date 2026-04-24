@@ -20,6 +20,7 @@ export default function FeedPage() {
 
   const [type, setType] = useState<ContentType>('clip')
   const [content, setContent] = useState('')
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
@@ -42,15 +43,45 @@ export default function FeedPage() {
         .eq('discord_id', authUser?.id)
         .single()
 
+      let finalContent = content
+      let filePath: string | null = null
+
+      if (selectedFile) {
+        if (selectedFile.size > 20 * 1024 * 1024) {
+          alert("FILE_TOO_LARGE: Maximum 20MB allowed. Check storage parameters on About page.")
+          router.push('/about')
+          return
+        }
+
+        const timestamp = Date.now()
+        const sanitizedName = selectedFile.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+        const fileName = `${timestamp}_${sanitizedName}`
+
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('clips')
+          .upload(fileName, selectedFile, {
+            cacheControl: '3600',
+            upsert: false,
+          })
+
+        if (uploadError) throw uploadError
+
+        const { data: urlData } = supabase.storage.from('clips').getPublicUrl(fileName)
+        finalContent = urlData.publicUrl
+        filePath = fileName
+      }
+
       const { error } = await supabase.from('posts').insert({
         user_id: dbUser?.id,
         type,
-        content,
+        content: finalContent,
+        file_path: filePath,
       })
 
       if (error) throw error
 
       setContent('')
+      setSelectedFile(null)
       setType('clip')
       refetch()
     } catch (error) {
@@ -158,14 +189,65 @@ export default function FeedPage() {
                 </div>
 
                 {(type === 'clip' || type === 'music') && (
-                  <input
-                    type="url"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="HTTPS://SOURCE_FEED.01"
-                    required
-                    className="h-14 flex-1 bg-transparent border-2 border-l-transparent border-t-zinc-800 border-b-zinc-800 border-r-zinc-800 focus:border-l-[#bbf600] focus:border-t-[#bbf600] focus:border-b-[#bbf600] hover:border-l-[#bbf600] hover:border-t-[#bbf600] hover:border-b-[#bbf600] text-white font-['Space_Grotesk'] text-sm px-4 outline-none transition-colors placeholder:text-zinc-800"
-                  />
+                  <>
+                    <input
+                      type="url"
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      placeholder="HTTPS://SOURCE_FEED.01"
+                      disabled={!!selectedFile}
+                      required={!selectedFile}
+                      className="h-14 flex-1 bg-transparent border-2 border-l-transparent border-t-zinc-800 border-b-zinc-800 border-r-zinc-800 focus:border-l-[#bbf600] focus:border-t-[#bbf600] focus:border-b-[#bbf600] hover:border-l-[#bbf600] hover:border-t-[#bbf600] hover:border-b-[#bbf600] text-white font-['Space_Grotesk'] text-sm px-4 outline-none transition-colors placeholder:text-zinc-800 disabled:opacity-50"
+                    />
+                    <input
+                      type="file"
+                      id="file-upload"
+                      accept="video/*,audio/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          if (file.size > 20 * 1024 * 1024) {
+                            alert("FILE_TOO_LARGE: Maximum 20MB allowed. Check storage parameters on About page.")
+                            router.push('/about')
+                            e.target.value = ''
+                            return
+                          }
+                          setSelectedFile(file)
+                          setContent('')
+                        }
+                      }}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="file-upload"
+                      className={`h-14 px-4 flex items-center justify-center cursor-pointer transition-all border-2 ${
+                        selectedFile
+                          ? 'bg-[#bbf600] text-black border-[#bbf600]'
+                          : 'border-t-zinc-800 border-b-zinc-800 border-l-zinc-800 border-r-zinc-800 hover:border-t-[#bbf600] hover:border-b-[#bbf600] hover:border-l-[#bbf600] text-zinc-400 hover:text-[#bbf600]'
+                      }`}
+                    >
+                      {selectedFile ? (
+                        <span className="text-xs font-['Space_Grotesk'] font-bold truncate max-w-[100px]">
+                          {selectedFile.name.slice(0, 12)}...
+                        </span>
+                      ) : (
+                        <img src="/upload.webp" alt="Upload" className="w-8 h-8 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+                      )}
+                    </label>
+                    {selectedFile && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedFile(null)
+                          const input = document.getElementById('file-upload') as HTMLInputElement
+                          if (input) input.value = ''
+                        }}
+                        className="h-14 px-2 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </>
                 )}
                 {type === 'reference' && (
                   <input
