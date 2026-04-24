@@ -82,20 +82,18 @@ CREATE TRIGGER update_score_on_vote
 AFTER INSERT OR DELETE OR UPDATE OF value ON votes
 FOR EACH ROW EXECUTE FUNCTION update_post_score();
 
--- Prevent deletion of post if it is referenced as source_id by other posts
-CREATE OR REPLACE FUNCTION prevent_delete_if_has_children()
+-- Orphan children (set source_id = NULL) when parent post is deleted
+CREATE OR REPLACE FUNCTION orphan_children_on_parent_delete()
 RETURNS TRIGGER AS $$
 BEGIN
-  IF EXISTS (SELECT 1 FROM posts WHERE source_id = OLD.id) THEN
-    RAISE EXCEPTION 'Cannot delete post that is referenced as source';
-  END IF;
+  UPDATE posts SET source_id = NULL WHERE source_id = OLD.id;
   RETURN OLD;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER prevent_post_delete_if_children
+CREATE TRIGGER orphan_children_on_delete
   BEFORE DELETE ON posts
-  FOR EACH ROW EXECUTE FUNCTION prevent_delete_if_has_children();
+  FOR EACH ROW EXECUTE FUNCTION orphan_children_on_parent_delete();
 
 -- Delete storage file when a post is deleted
 CREATE OR REPLACE FUNCTION delete_post_storage()
