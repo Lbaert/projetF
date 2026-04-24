@@ -426,7 +426,7 @@ export default function FeedPage() {
                   selectionMode ? 'bg-[#bbf600]' : 'hover:bg-zinc-800'
                 }`}
               >
-                <img src="/select.webp" alt="Select" className="w-10 h-10 object-contain" style={{ filter: selectionMode ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+                <img src="/highlight.webp" alt="Highlight" className="w-10 h-10 object-contain" style={{ filter: selectionMode ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
               </button>
             )}
 
