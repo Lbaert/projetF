@@ -389,7 +389,7 @@ export default function FeedPage() {
               onClick={() => router.push('/dashboard')}
               className="w-14 h-14 flex items-center justify-center hover:bg-zinc-800 transition-all"
             >
-              <img src="/dash.webp" alt="Dashboard" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+              <img src="/dash.webp" alt="Dashboard" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(180deg)' }} />
             </button>
 
             {/* About Link */}
@@ -397,7 +397,7 @@ export default function FeedPage() {
               onClick={() => router.push('/about')}
               className="w-14 h-14 flex items-center justify-center hover:bg-zinc-800 transition-all"
             >
-              <img src="/about.webp" alt="About" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+              <img src="/about.webp" alt="About" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(180deg)' }} />
             </button>
 
             {/* Account Link */}
@@ -405,7 +405,7 @@ export default function FeedPage() {
               onClick={() => router.push('/account')}
               className="w-14 h-14 flex items-center justify-center hover:bg-zinc-800 transition-all"
             >
-              <img src="/membre.webp" alt="Account" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+              <img src="/membre.webp" alt="Account" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(180deg)' }} />
             </button>
 
             {/* Invert Colors Button */}
@@ -415,7 +415,7 @@ export default function FeedPage() {
                 inverted ? 'bg-white' : 'hover:bg-zinc-800'
               }`}
             >
-              <img src="/dark.webp" alt="Dark" className="w-10 h-10 object-contain" style={{ filter: inverted ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+              <img src="/dark.webp" alt="Dark" className="w-10 h-10 object-contain" style={{ filter: inverted ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(180deg)' }} />
             </button>
 
             {/* Selection Mode Button */}
@@ -423,10 +423,10 @@ export default function FeedPage() {
               <button
                 onClick={toggleSelectionMode}
                 className={`w-14 h-14 shrink-0 flex items-center justify-center transition-all ${
-                  selectionMode ? 'bg-[#bbf600]' : 'hover:bg-zinc-800'
+                  selectionMode ? 'bg-red-500' : 'hover:bg-zinc-800'
                 }`}
               >
-                <img src="/montage.webp" alt="Montage" className="w-10 h-10 object-contain" style={{ filter: selectionMode ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+                <img src="/montage.webp" alt="Montage" className="w-10 h-10 object-contain" style={{ filter: selectionMode ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(100deg)' }} />
               </button>
             )}
 
@@ -438,15 +438,15 @@ export default function FeedPage() {
                   onClick={() => setFilter(f)}
                   className={`w-14 h-14 shrink-0 flex items-center justify-center transition-all ${
                     filter === f
-                      ? 'bg-[#bbf600]'
+                      ? 'bg-[#f6bd00]'
                       : 'hover:bg-zinc-800'
                   }`}
                 >
-                  {f === 'clip' && <img src="/video.webp" alt="Clip" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
-                  {f === 'music' && <img src="/audio.webp" alt="Audio" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
-                  {f === 'reference' && <img src="/texte.webp" alt="Texte" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
-                  {f === 'highlight' && <img src="/highlight.webp" alt="Highlight" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
-                  {f === 'all' && <img src="/all.webp" alt="All" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
+                  {f === 'clip' && <img src="/video.webp" alt="Clip" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }} />}
+                  {f === 'music' && <img src="/audio.webp" alt="Audio" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }} />}
+                  {f === 'reference' && <img src="/texte.webp" alt="Texte" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }} />}
+                  {f === 'highlight' && <img src="/highlight.webp" alt="Highlight" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }} />}
+                  {f === 'all' && <img src="/all.webp" alt="All" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(45deg)' }} />}
                 </button>
               ))}
             </div>
@@ -460,7 +460,7 @@ export default function FeedPage() {
               }}
               className="w-14 h-14 shrink-0 flex items-center justify-center hover:bg-zinc-800 transition-all"
             >
-              <img src="/logo2.webp" alt="Sound" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />
+              <img src="/logo2.webp" alt="Sound" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(-80deg)' }} />
             </button>
 
             {/* Avatar with logout on hover */}
