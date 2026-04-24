@@ -445,7 +445,7 @@ export default function FeedPage() {
                   {f === 'clip' && <img src="/video.webp" alt="Clip" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
                   {f === 'music' && <img src="/audio.webp" alt="Audio" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
                   {f === 'reference' && <img src="/texte.webp" alt="Texte" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
-                  {f === 'highlight' && <img src="/video.webp" alt="Highlight" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
+                  {f === 'highlight' && <img src="/highlight.webp" alt="Highlight" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
                   {f === 'all' && <img src="/all.webp" alt="All" className="w-10 h-10 object-contain" style={{ filter: filter === f ? 'none' : 'invert(73%) sepia(94%) saturate(387%) hue-rotate(31deg)' }} />}
                 </button>
               ))}
