@@ -400,14 +400,6 @@ export default function FeedPage() {
               <img src="/about.webp" alt="About" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(180deg)' }} />
             </button>
 
-            {/* Account Link */}
-            <button
-              onClick={() => router.push('/account')}
-              className="w-14 h-14 flex items-center justify-center hover:bg-zinc-800 transition-all"
-            >
-              <img src="/membre.webp" alt="Account" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(180deg)' }} />
-            </button>
-
             {/* Invert Colors Button */}
             <button
               onClick={() => setInverted(!inverted)}
@@ -461,6 +453,14 @@ export default function FeedPage() {
               className="w-14 h-14 shrink-0 flex items-center justify-center hover:bg-zinc-800 transition-all"
             >
               <img src="/logo2.webp" alt="Sound" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(-80deg)' }} />
+            </button>
+
+            {/* Account Link */}
+            <button
+              onClick={() => router.push('/account')}
+              className="w-14 h-14 flex items-center justify-center hover:bg-zinc-800 transition-all"
+            >
+              <img src="/membre.webp" alt="Account" className="w-10 h-10 object-contain" style={{ filter: 'invert(73%) sepia(94%) saturate(387%) hue-rotate(-80deg)' }} />
             </button>
 
             {/* Avatar with logout on hover */}
