@@ -10,6 +10,7 @@ interface PostCardProps {
   selectionMode?: boolean
   isSelected?: boolean
   onSelect?: (postId: string) => void
+  selectionDisabled?: boolean
 }
 
 function isVideoUrl(url: string): boolean {
@@ -59,7 +60,7 @@ function VideoThumbnail({ url }: { url: string }) {
   return null
 }
 
-export function PostCard({ post, canVote, canDelete, onDelete, selectionMode = false, isSelected = false, onSelect }: PostCardProps) {
+export function PostCard({ post, canVote, canDelete, onDelete, selectionMode = false, isSelected = false, onSelect, selectionDisabled = false }: PostCardProps) {
   const upvotes = (post as any).upvotes ?? 0
   const downvotes = (post as any).downvotes ?? 0
 
@@ -87,18 +88,28 @@ export function PostCard({ post, canVote, canDelete, onDelete, selectionMode = f
       <div className="p-4">
         <div className="flex items-center gap-2 mb-4">
           {selectionMode && (
-            <button
-              onClick={() => onSelect?.(post.id)}
-              className={`w-8 h-8 shrink-0 flex items-center justify-center border-2 transition-all ${
-                isSelected
-                  ? 'bg-[#bbf600] border-[#bbf600]'
-                  : 'border-zinc-700 hover:border-[#bbf600]'
-              }`}
-            >
-              {isSelected && (
-                <img src="/check.webp" alt="Selected" className="w-5 h-5 object-contain" />
-              )}
-            </button>
+            selectionDisabled ? (
+              <div className="w-8 h-8 shrink-0 flex items-center justify-center border-2 border-red-500/50 bg-red-500/10">
+                <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+              </div>
+            ) : (
+              <button
+                onClick={() => onSelect?.(post.id)}
+                className={`w-8 h-8 shrink-0 flex items-center justify-center border-2 transition-all ${
+                  isSelected
+                    ? 'bg-[#bbf600] border-[#bbf600]'
+                    : 'border-zinc-700 hover:border-[#bbf600]'
+                }`}
+              >
+                {isSelected && (
+                  <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                  </svg>
+                )}
+              </button>
+            )
           )}
           <div className="w-8 h-8 bg-zinc-800 border border-zinc-700 overflow-hidden flex items-center justify-center shrink-0">
             {post.user?.avatar ? (

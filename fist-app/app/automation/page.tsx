@@ -63,7 +63,7 @@ export default function AutomationPage() {
         .in('id', idList)
 
       if (data) {
-        const videoPosts = data.filter((p: Post) => p.type === 'clip')
+        const videoPosts = data.filter((p: Post) => p.type === 'clip' && p.file_path)
         setPosts(videoPosts)
       }
       setLoading(false)

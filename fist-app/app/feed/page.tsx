@@ -275,14 +275,67 @@ export default function FeedPage() {
                   </>
                 )}
                 {type === 'reference' && (
-                  <input
-                    type="text"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="DESCRIBE THE ASSET..."
-                    required
-                    className="h-14 flex-1 bg-transparent border-2 border-l-transparent border-t-zinc-800 border-b-zinc-800 border-r-zinc-800 focus:border-l-[#bbf600] focus:border-t-[#bbf600] focus:border-b-[#bbf600] hover:border-l-[#bbf600] hover:border-t-[#bbf600] hover:border-b-[#bbf600] text-white font-['Space_Grotesk'] text-sm px-4 outline-none transition-colors placeholder:text-zinc-800"
-                  />
+                  <>
+                    <input
+                      type="text"
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      placeholder="DESCRIBE THE ASSET..."
+                      disabled={!!selectedFile}
+                      required={!selectedFile}
+                      className="h-14 flex-1 bg-transparent border-2 border-l-transparent border-t-zinc-800 border-b-zinc-800 border-r-zinc-800 focus:border-l-[#bbf600] focus:border-t-[#bbf600] focus:border-b-[#bbf600] hover:border-l-[#bbf600] hover:border-t-[#bbf600] hover:border-b-[#bbf600] text-white font-['Space_Grotesk'] text-sm px-4 outline-none transition-colors placeholder:text-zinc-800 disabled:opacity-50"
+                    />
+                    <input
+                      type="file"
+                      id="file-upload-ref"
+                      accept="image/*,application/pdf,.txt,.doc,.docx"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          if (file.size > 20 * 1024 * 1024) {
+                            alert("FILE_TOO_LARGE: Maximum 20MB allowed. Check storage parameters on About page.")
+                            router.push('/about')
+                            e.target.value = ''
+                            return
+                          }
+                          setSelectedFile(file)
+                          setContent('')
+                        }
+                      }}
+                      className="hidden"
+                    />
+                    <label
+                      htmlFor="file-upload-ref"
+                      className={`h-14 px-4 flex items-center justify-center cursor-pointer transition-all border-2 ${
+                        selectedFile
+                          ? 'bg-[#bbf600] text-black border-[#bbf600]'
+                          : 'border-t-zinc-800 border-b-zinc-800 border-l-zinc-800 border-r-zinc-800 hover:border-t-[#bbf600] hover:border-b-[#bbf600] hover:border-l-[#bbf600] text-zinc-400 hover:text-[#bbf600]'
+                      }`}
+                    >
+                      {selectedFile ? (
+                        <span className="text-xs font-['Space_Grotesk'] font-bold truncate max-w-[100px]">
+                          {selectedFile.name.slice(0, 12)}...
+                        </span>
+                      ) : (
+                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                      )}
+                    </label>
+                    {selectedFile && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedFile(null)
+                          const input = document.getElementById('file-upload-ref') as HTMLInputElement
+                          if (input) input.value = ''
+                        }}
+                        className="h-14 px-2 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </>
                 )}
 
                 <button
@@ -427,6 +480,7 @@ export default function FeedPage() {
                 selectionMode={selectionMode}
                 isSelected={selectedPosts.has(post.id)}
                 onSelect={handleSelectPost}
+                selectionDisabled={(post.type === 'clip' || post.type === 'music') && !post.file_path}
               />
             ))}
           </div>
