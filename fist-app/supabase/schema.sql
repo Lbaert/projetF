@@ -48,7 +48,7 @@ CREATE POLICY "Users can update own" ON users FOR UPDATE USING (auth.uid() = id)
 CREATE POLICY "Anyone can view posts" ON posts FOR SELECT USING (true);
 CREATE POLICY "Authenticated can create posts" ON posts FOR INSERT WITH CHECK (auth.role() = 'authenticated');
 CREATE POLICY "Users can update own posts" ON posts FOR UPDATE USING (auth.uid() = user_id);
-CREATE POLICY "Users can delete own posts" ON posts FOR DELETE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own posts" ON posts FOR DELETE USING (auth.uid() = user_id OR user_id IS NULL);
 
 CREATE POLICY "Anyone can view votes" ON votes FOR SELECT USING (true);
 CREATE POLICY "Authenticated can create votes" ON votes FOR INSERT WITH CHECK (auth.role() = 'authenticated');

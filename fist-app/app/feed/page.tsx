@@ -122,15 +122,22 @@ export default function FeedPage() {
     const { createClient } = await import('@/lib/supabase/client')
     const supabase = createClient()
 
-    const { data: post } = await supabase.from('posts').select('file_path').eq('id', postId).single()
+    const { data: { user: authUser } } = await supabase.auth.getUser()
+    console.log('Auth user id:', authUser?.id)
+
+    const { data: post } = await supabase.from('posts').select('file_path, user_id').eq('id', postId).single()
+    console.log('Deleting post:', post)
 
     if (post?.file_path) {
-      const pathsToDelete: string[] = []
-      if (post.file_path) pathsToDelete.push(post.file_path)
-      await supabase.storage.from('clips').remove(pathsToDelete)
+      const { error: storageError } = await supabase.storage.from('clips').remove([post.file_path])
+      if (storageError) console.error('Storage delete error:', storageError)
     }
 
-    await supabase.from('posts').delete().eq('id', postId)
+    const { error: dbError } = await supabase.from('posts').delete().eq('id', postId)
+    if (dbError) {
+      console.error('DB delete error:', dbError)
+      alert(`Erreur suppression: ${dbError.message}`)
+    }
     refetch()
   }
 
