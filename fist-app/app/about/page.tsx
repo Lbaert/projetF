@@ -85,10 +85,10 @@ export default function AboutPage() {
             </div>
 
             <div className="bg-zinc-900 p-4 space-y-2">
-              <p className="text-[#C2FE0C] font-bold uppercase text-xs flex items-center gap-2">Methode 2: <img src="/drop.webp" alt="Drop" className="w-4 h-4 object-contain" /> Fichier (max 20MB)</p>
+              <p className="text-[#C2FE0C] font-bold uppercase text-xs">Methode 2: Upload de fichier (max 20MB)</p>
               <ol className="list-decimal list-inside text-zinc-400 space-y-1">
                 <li>Selectionne le type desire</li>
-                <li>Clique sur le bouton <img src="/drop.webp" alt="Drop" className="w-4 h-4 inline-block object-contain" /> pour choisir un fichier</li>
+                <li>Clique sur le bouton <span className="text-white">+</span> pour choisir un fichier</li>
                 <li>Le fichier doit faire moins de 20MB</li>
                 <li>Clique sur <span className="text-[#C2FE0C] font-bold">INITIATE</span></li>
               </ol>
