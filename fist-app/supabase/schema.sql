@@ -81,3 +81,41 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER update_score_on_vote
 AFTER INSERT OR DELETE OR UPDATE OF value ON votes
 FOR EACH ROW EXECUTE FUNCTION update_post_score();
+
+-- Prevent deletion of post if it is referenced as source_id by other posts
+CREATE OR REPLACE FUNCTION prevent_delete_if_has_children()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM posts WHERE source_id = OLD.id) THEN
+    RAISE EXCEPTION 'Cannot delete post that is referenced as source';
+  END IF;
+  RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER prevent_post_delete_if_children
+  BEFORE DELETE ON posts
+  FOR EACH ROW EXECUTE FUNCTION prevent_delete_if_has_children();
+
+-- Delete storage file when a post is deleted
+CREATE OR REPLACE FUNCTION delete_post_storage()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF OLD.file_path IS NOT NULL AND OLD.file_path != '' THEN
+    DELETE FROM supabase.storage.objects WHERE bucket_id = 'clips' AND name = OLD.file_path;
+  END IF;
+  RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_post_delete_delete_storage
+  AFTER DELETE ON posts
+  FOR EACH ROW EXECUTE FUNCTION delete_post_storage();
+
+-- ============================================
+-- ONE-TIME CLEANUP: Run this once to clean existing orphaned data
+-- Remove posts whose source_id points to a deleted post
+-- DELETE FROM posts WHERE source_id IS NOT NULL AND source_id NOT IN (SELECT id FROM posts);
+
+-- Remove storage files that have no corresponding post
+-- This requires listing all files in storage and comparing with posts.file_path

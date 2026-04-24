@@ -121,6 +121,15 @@ export default function FeedPage() {
     if (!confirm('Supprimer ce post ?')) return
     const { createClient } = await import('@/lib/supabase/client')
     const supabase = createClient()
+
+    const { data: post } = await supabase.from('posts').select('file_path').eq('id', postId).single()
+
+    if (post?.file_path) {
+      const pathsToDelete: string[] = []
+      if (post.file_path) pathsToDelete.push(post.file_path)
+      await supabase.storage.from('clips').remove(pathsToDelete)
+    }
+
     await supabase.from('posts').delete().eq('id', postId)
     refetch()
   }
